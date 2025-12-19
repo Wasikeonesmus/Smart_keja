@@ -12,9 +12,8 @@ This guide will help you deploy SmartKeja for testing purposes (not production).
    - Select branch: `main`
    - Name: `smartkeja-test`
    - Environment: `Python 3`
-   - Build Command: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
+   - Build Command: `pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput`
    - Start Command: `gunicorn smartkeja.wsgi:application`
-   - Release Command: `python manage.py migrate --noinput` (IMPORTANT: Add this!)
 
 3. **Environment Variables** (in Render dashboard):
    ```
