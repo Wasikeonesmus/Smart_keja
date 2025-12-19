@@ -467,8 +467,16 @@
             }
         }
         
+        // Track if maps are being initialized to prevent duplicates
+        let mapsInitializing = false;
+        
         // Initialize when DOM is ready and after properties are loaded
         function ensureMapsInitialized() {
+            // Prevent duplicate initialization
+            if (mapsInitializing) {
+                return;
+            }
+            
             // Wait for Leaflet to be available
             if (typeof L === 'undefined') {
                 // Check again after a short delay
@@ -476,11 +484,15 @@
                 return;
             }
             
+            mapsInitializing = true;
+            
             // Initialize maps
             initializePropertyMaps();
             
-            // Also initialize after a short delay to catch dynamically loaded properties
-            setTimeout(initializePropertyMaps, 1000);
+            // Reset flag after initialization
+            setTimeout(() => {
+                mapsInitializing = false;
+            }, 1000);
         }
         
         if (document.readyState === 'loading') {
@@ -489,9 +501,19 @@
             ensureMapsInitialized();
         }
         
-        // Also listen for property listings updates
+        // Also listen for property listings updates (with debounce)
+        let propertiesLoadedTimeout;
         document.addEventListener('propertiesLoaded', function() {
-            setTimeout(initializePropertyMaps, 500);
+            clearTimeout(propertiesLoadedTimeout);
+            propertiesLoadedTimeout = setTimeout(() => {
+                if (!mapsInitializing) {
+                    mapsInitializing = true;
+                    initializePropertyMaps();
+                    setTimeout(() => {
+                        mapsInitializing = false;
+                    }, 1000);
+                }
+            }, 500);
         });
         
         // Hook into PropertyListings to initialize maps after rendering
