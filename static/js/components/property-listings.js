@@ -381,6 +381,11 @@ export class PropertyListings {
             const propertyCard = this.createPropertyCard(property);
             container.appendChild(propertyCard);
         });
+        
+        // Dispatch event to initialize maps after properties are rendered
+        setTimeout(() => {
+            document.dispatchEvent(new CustomEvent('propertiesLoaded'));
+        }, 100);
 
         // Add fade-in animation
         container.querySelectorAll('.property-card').forEach((card, index) => {
