@@ -1,0 +1,489 @@
+/* ============================================
+   Professional Property Card Redesign
+   ============================================ */
+
+/* Property Image - Large and Centered */
+.property-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.property-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: block;
+}
+
+.property-card:hover .property-image {
+    transform: scale(1.08);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.1) 100%);
+    pointer-events: none;
+}
+
+/* Trust Badge - Better Positioning */
+.property-image-wrapper .trust-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+/* Property Info Section */
+.property-info-section {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Property Header */
+.property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin: 0;
+}
+
+.property-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0;
+    line-height: 1.3;
+    flex: 1;
+    letter-spacing: -0.01em;
+}
+
+.property-header .badge {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 12px;
+}
+
+/* Property Location */
+.property-location {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #6c757d;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+.property-location i {
+    color: var(--sk-primary);
+    font-size: 1rem;
+}
+
+/* Property Description */
+.property-description {
+    color: #495057;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 4.32rem; /* 3 lines */
+}
+
+/* Property Features Grid */
+.property-features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding: 14px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin: 0;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+}
+
+.feature-item i {
+    font-size: 1.5rem;
+    color: var(--sk-primary);
+    margin-bottom: 4px;
+}
+
+.feature-item span {
+    font-size: 0.85rem;
+    color: #495057;
+    font-weight: 500;
+}
+
+.feature-item.rating-item i {
+    color: #ffc107;
+}
+
+.feature-item.rating-item strong {
+    color: #1a1a1a;
+    font-size: 0.95rem;
+}
+
+/* Property Pricing */
+.property-pricing {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+    margin: 0;
+    gap: 12px;
+}
+
+.price-display {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.price-amount {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--sk-primary);
+    line-height: 1.2;
+}
+
+.price-period {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.btn-booking {
+    padding: 10px 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-radius: 10px;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-booking:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.3);
+}
+
+/* Trust Score Section */
+.trust-score-section {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin: 0;
+}
+
+.trust-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #495057;
+}
+
+.trust-label i {
+    color: var(--sk-success);
+}
+
+.progress-trust {
+    height: 6px;
+    border-radius: 10px;
+    background: #e9ecef;
+    overflow: hidden;
+}
+
+.progress-trust .progress-bar {
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.trust-value {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sk-success);
+    text-align: right;
+}
+
+/* Map Section */
+.property-map-section {
+    border-top: 2px solid #e9ecef;
+    background: #f8f9fa;
+    padding: 16px 20px;
+    margin: 0;
+}
+
+.map-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.map-header i {
+    color: var(--sk-primary);
+    font-size: 1.1rem;
+}
+
+.map-header h6 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    margin: 0;
+}
+
+.property-map-container {
+    height: 200px;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid #dee2e6;
+    background: #ffffff;
+    margin: 0 0 10px 0;
+    position: relative;
+}
+
+.map-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.map-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin: 0;
+}
+
+.btn-map-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 8px;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    border: 1.5px solid var(--sk-primary);
+    color: var(--sk-primary);
+    background: white;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.btn-map-action i {
+    font-size: 1.1rem;
+}
+
+.btn-map-action span {
+    font-size: 0.75rem;
+}
+
+.btn-map-action:hover {
+    background: var(--sk-primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 115, 119, 0.2);
+}
+
+/* Card Improvements */
+.property-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.property-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .property-image-wrapper {
+        height: 280px;
+    }
+    
+    .property-info-section {
+        padding: 18px;
+        gap: 10px;
+    }
+    
+    .property-title {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .property-image-wrapper {
+        height: 240px;
+    }
+    
+    .property-title {
+        font-size: 1.1rem;
+    }
+    
+    .property-info-section {
+        padding: 16px;
+        gap: 10px;
+    }
+    
+    .property-features {
+        gap: 6px;
+        padding: 12px;
+    }
+    
+    .feature-item i {
+        font-size: 1.2rem;
+    }
+    
+    .price-amount {
+        font-size: 1.5rem;
+    }
+    
+    .property-pricing {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+        padding: 12px 14px;
+    }
+    
+    .btn-booking {
+        width: 100%;
+        padding: 12px 20px;
+    }
+    
+    .property-map-section {
+        padding: 14px 16px;
+    }
+    
+    .property-map-container {
+        height: 180px;
+    }
+    
+    .map-actions {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .btn-map-action {
+        flex-direction: row;
+        justify-content: center;
+        padding: 10px 16px;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 576px) {
+    .property-image-wrapper {
+        height: 200px;
+    }
+    
+    .property-info-section {
+        padding: 14px;
+        gap: 8px;
+    }
+    
+    .property-title {
+        font-size: 1rem;
+    }
+    
+    .property-location {
+        font-size: 0.85rem;
+    }
+    
+    .property-description {
+        font-size: 0.85rem;
+        min-height: auto;
+    }
+    
+    .property-features {
+        padding: 10px 8px;
+        gap: 4px;
+    }
+    
+    .feature-item {
+        gap: 4px;
+    }
+    
+    .feature-item i {
+        font-size: 1rem;
+    }
+    
+    .feature-item span {
+        font-size: 0.7rem;
+    }
+    
+    .price-amount {
+        font-size: 1.3rem;
+    }
+    
+    .property-pricing {
+        padding: 10px 12px;
+    }
+    
+    .trust-score-section {
+        padding: 10px;
+    }
+    
+    .property-map-section {
+        padding: 12px 14px;
+    }
+    
+    .property-map-container {
+        height: 160px;
+    }
+}
+

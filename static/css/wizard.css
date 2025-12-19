@@ -1,0 +1,209 @@
+/* Step Wizard Styles */
+
+.step-indicator {
+    padding: 20px 0;
+}
+
+.step-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef;
+}
+
+.step-item.active .step-number {
+    background: var(--sk-primary);
+    color: white;
+    border-color: var(--sk-primary);
+    transform: scale(1.1);
+}
+
+.step-item.completed .step-number {
+    background: var(--sk-success);
+    color: white;
+    border-color: var(--sk-success);
+}
+
+.step-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    margin-top: 8px;
+}
+
+.step-item.active .step-label {
+    color: var(--sk-primary);
+    font-weight: 600;
+}
+
+.step-connector {
+    flex: 1;
+    height: 2px;
+    background: #e9ecef;
+    margin: 0 10px;
+    margin-top: -20px;
+    position: relative;
+    z-index: -1;
+}
+
+.step-item.completed ~ .step-connector {
+    background: var(--sk-success);
+}
+
+.step-content {
+    min-height: 400px;
+    padding: 20px 0;
+}
+
+.step-navigation {
+    padding: 20px 0;
+    border-top: 1px solid #e9ecef;
+}
+
+/* File Uploader Styles */
+
+.upload-area {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.upload-area:hover {
+    background: #e9ecef;
+    border-color: var(--sk-primary) !important;
+}
+
+.upload-area.drag-over {
+    background: #e7f5e7;
+    border-color: var(--sk-primary) !important;
+    transform: scale(1.02);
+}
+
+.file-item {
+    transition: all 0.3s ease;
+}
+
+.file-item.completed {
+    border-left: 4px solid var(--sk-success);
+}
+
+.file-item.error {
+    border-left: 4px solid var(--sk-danger);
+}
+
+.file-item.uploading {
+    border-left: 4px solid var(--sk-info);
+}
+
+.file-preview {
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Verification Status Styles */
+
+.verification-status {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.verification-status.pending {
+    border-left: 4px solid #6c757d;
+}
+
+.verification-status.approved {
+    border-left: 4px solid var(--sk-success);
+}
+
+.verification-status.rejected,
+.verification-status.failed {
+    border-left: 4px solid #dc3545;
+}
+
+.verification-status.partial {
+    border-left: 4px solid #ffc107;
+}
+
+/* Map Container Styles */
+
+.map-container {
+    width: 100%;
+    height: 400px !important;
+    min-height: 400px !important;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 2px solid #dee2e6;
+    z-index: 1;
+    background-color: #f8f9fa;
+    position: relative;
+}
+
+.map-container:empty::before {
+    content: 'Loading map...';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Leaflet Map Styles */
+.leaflet-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+}
+
+.leaflet-control-zoom {
+    border: none;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.leaflet-control-zoom a {
+    background-color: white;
+    color: var(--sk-primary);
+    border: 1px solid #dee2e6;
+}
+
+.leaflet-control-zoom a:hover {
+    background-color: var(--sk-primary);
+    color: white;
+}
+
+.location-picker {
+    margin-top: 20px;
+}
+
+.coordinates-display {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 0.9rem;
+}
+
+

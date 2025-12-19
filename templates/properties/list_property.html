@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <!-- List Property Section -->
+    <section id="list" class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-5 fw-bold">List Your Property</h2>
+                <p class="lead text-muted">Reach thousands of verified tenants. List your property in minutes.</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <!-- Step Indicator -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <small class="text-muted">Step 1 of 4</small>
+                                    <small class="text-muted">25% Complete</small>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar" style="width: 25%"></div>
+                                </div>
+                            </div>
+                            
+                            <h4 class="mb-4">Property Details</h4>
+                            
+                            <!-- Property Type -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Property Type *</label>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" name="propertyType" id="typeApartmentForm" value="apartment" checked>
+                                        <label class="btn btn-outline-primary w-100 py-3" for="typeApartmentForm">
+                                            <i class="bi bi-building d-block fs-3 mb-2"></i>
+                                            Apartment
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" name="propertyType" id="typeHouseForm" value="house">
+                                        <label class="btn btn-outline-primary w-100 py-3" for="typeHouseForm">
+                                            <i class="bi bi-house-door d-block fs-3 mb-2"></i>
+                                            House
+                                        </label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="radio" class="btn-check" name="propertyType" id="typeStudioForm" value="studio">
+                                        <label class="btn btn-outline-primary w-100 py-3" for="typeStudioForm">
+                                            <i class="bi bi-door-open d-block fs-3 mb-2"></i>
+                                            Studio
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Property Name -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Property Name *</label>
+                                <input type="text" class="form-control" placeholder="e.g., Sunny Valley Apartments">
+                                <small class="text-muted">Give your property a memorable name</small>
+                            </div>
+                            
+                            <!-- Location -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">County *</label>
+                                    <select class="form-select">
+                                        <option selected>Select County</option>
+                                        <option>Nairobi</option>
+                                        <option>Mombasa</option>
+                                        <option>Kisumu</option>
+                                        <option>Nakuru</option>
+                                        <option>Eldoret</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Estate/Area *</label>
+                                    <input type="text" class="form-control" placeholder="e.g., Kilimani">
+                                </div>
+                            </div>
+                            
+                            <!-- Address -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Street Address</label>
+                                <input type="text" class="form-control mb-2" placeholder="Building name and street">
+                                <input type="text" class="form-control" placeholder="Nearest landmark">
+                            </div>
+                            
+                            <!-- Bedrooms & Bathrooms -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Bedrooms *</label>
+                                    <select class="form-select">
+                                        <option selected>Select</option>
+                                        <option>Studio</option>
+                                        <option>1 Bedroom</option>
+                                        <option>2 Bedrooms</option>
+                                        <option>3 Bedrooms</option>
+                                        <option>4+ Bedrooms</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Bathrooms *</label>
+                                    <select class="form-select">
+                                        <option selected>Select</option>
+                                        <option>1 Bathroom</option>
+                                        <option>2 Bathrooms</option>
+                                        <option>3 Bathrooms</option>
+                                        <option>4+ Bathrooms</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Monthly Rent -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Monthly Rent (KSh) *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">KSh</span>
+                                    <input type="number" class="form-control" placeholder="35,000">
+                                    <span class="input-group-text">/month</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Deposit -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Security Deposit *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">KSh</span>
+                                    <input type="number" class="form-control" placeholder="35,000">
+                                </div>
+                                <small class="text-muted">Typically one month's rent</small>
+                            </div>
+                            
+                            <!-- Amenities -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Amenities</label>
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="parking">
+                                            <label class="form-check-label" for="parking">
+                                                <i class="bi bi-car-front me-1"></i> Parking
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="security">
+                                            <label class="form-check-label" for="security">
+                                                <i class="bi bi-shield-check me-1"></i> 24/7 Security
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="water">
+                                            <label class="form-check-label" for="water">
+                                                <i class="bi bi-droplet me-1"></i> Water Supply
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="wifi">
+                                            <label class="form-check-label" for="wifi">
+                                                <i class="bi bi-wifi me-1"></i> WiFi
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="gym">
+                                            <label class="form-check-label" for="gym">
+                                                <i class="bi bi-heart-pulse me-1"></i> Gym
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="pool">
+                                            <label class="form-check-label" for="pool">
+                                                <i class="bi bi-water me-1"></i> Swimming Pool
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Property Description *</label>
+                                <textarea class="form-control" rows="5" placeholder="Describe your property, its features, and what makes it special..."></textarea>
+                                <small class="text-muted">Minimum 100 characters</small>
+                            </div>
+                            
+                            <!-- Photos Upload -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Property Photos *</label>
+                                <div class="border border-2 border-dashed rounded p-4 text-center">
+                                    <i class="bi bi-cloud-upload fs-1 text-primary mb-3 d-block"></i>
+                                    <p class="mb-2">Drag and drop photos here or click to browse</p>
+                                    <small class="text-muted">Upload at least 5 photos. Max 20MB per photo.</small>
+                                    <input type="file" class="form-control mt-3" multiple accept="image/*">
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Pro tip: Properties with 8+ photos get 3x more inquiries
+                                </small>
+                            </div>
+                            
+                            <!-- Video Upload -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Property Video (Optional)</label>
+                                <div class="alert alert-info">
+                                    <i class="bi bi-camera-video me-2"></i>
+                                    Upload a video tour for AI verification and get a <strong>Verified Badge</strong>
+                                </div>
+                                <input type="file" class="form-control" accept="video/*">
+                            </div>
+                            
+                            <!-- Availability -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Available From *</label>
+                                <input type="date" class="form-control">
+                            </div>
+                            
+                            <!-- Contact Preferences -->
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Preferred Contact Method</label>
+                                <div class="row g-2">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="contactPhone" checked>
+                                            <label class="form-check-label" for="contactPhone">
+                                                Phone Calls
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="contactWhatsApp" checked>
+                                            <label class="form-check-label" for="contactWhatsApp">
+                                                WhatsApp
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="contactEmail">
+                                            <label class="form-check-label" for="contactEmail">
+                                                Email
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Terms -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms">
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Listing Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <button class="btn btn-outline-secondary">
+                                    <i class="bi bi-save me-2"></i>Save Draft
+                                </button>
+                                <div>
+                                    <button class="btn btn-outline-primary me-2">Preview</button>
+                                    <button class="btn btn-primary">
+                                        Continue <i class="bi bi-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Benefits Card -->
+                    <div class="card mt-4 border-primary">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="bi bi-star-fill text-warning me-2"></i>
+                                Why List on SmartKeja?
+                            </h5>
+                            <div class="row g-3 mt-2">
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <div>
+                                            <strong>Verified Tenants</strong>
+                                            <p class="small text-muted mb-0">All tenants are ID verified</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <div>
+                                            <strong>Secure Payments</strong>
+                                            <p class="small text-muted mb-0">M-Pesa integration</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex align-items-start">
+                                        <i class="bi bi-check-circle-fill text-success me-2 mt-1"></i>
+                                        <div>
+                                            <strong>Zero Commission</strong>
+                                            <p class="small text-muted mb-0">List for free</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    {% include 'properties/booking_modal.html' %}
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Set Django API URL
+        window.DJANGO_API_URL = '{% url "api_properties" %}';
+        window.DJANGO_BOOKING_API_URL = '{% url "api_booking" %}';
+    </script>
+{% endblock %}
+

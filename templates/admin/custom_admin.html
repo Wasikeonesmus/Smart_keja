@@ -1,0 +1,488 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Admin Panel - SmartKeja Solutions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-header {
+        background: linear-gradient(135deg, #0D7377 0%, #14A085 100%);
+        color: white;
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-left: 4px solid;
+        transition: transform 0.2s, box-shadow 0.2s;
+        height: 100%;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    .stat-card.primary { border-left-color: #0D7377; }
+    .stat-card.success { border-left-color: #4CAF50; }
+    .stat-card.warning { border-left-color: #FF9800; }
+    .stat-card.danger { border-left-color: #F44336; }
+    .stat-card.info { border-left-color: #2196F3; }
+    .stat-card.purple { border-left-color: #9C27B0; }
+    
+    .stat-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .stat-change {
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+    }
+    
+    .stat-change.positive { color: #4CAF50; }
+    .stat-change.negative { color: #F44336; }
+    
+    .admin-section {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #0D7377;
+        margin: 0;
+    }
+    
+    .data-table {
+        width: 100%;
+    }
+    
+    .data-table th {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        text-align: left;
+        font-weight: 600;
+        color: #333;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    .data-table td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .data-table tr:hover {
+        background: #f8f9fa;
+    }
+    
+    .badge-custom {
+        padding: 0.35em 0.65em;
+        font-size: 0.75rem;
+        font-weight: 600;
+        border-radius: 4px;
+    }
+    
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .action-btn {
+        padding: 1rem;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        transition: all 0.2s;
+        display: block;
+    }
+    
+    .action-btn:hover {
+        border-color: #0D7377;
+        background: #f0f9fa;
+        color: #0D7377;
+        transform: translateY(-2px);
+    }
+    
+    .action-btn i {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #0D7377;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Admin Header -->
+<div class="admin-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-8">
+                <h1 class="mb-2"><i class="bi bi-shield-check me-2"></i>Admin Panel</h1>
+                <p class="mb-0 opacity-90">Manage your SmartKeja platform</p>
+            </div>
+            <div class="col-md-4 text-end">
+                <a href="/admin/" class="btn btn-light btn-sm me-2" target="_blank">
+                    <i class="bi bi-gear me-1"></i>Django Admin
+                </a>
+                <a href="{% url 'home' %}" class="btn btn-outline-light btn-sm">
+                    <i class="bi bi-house me-1"></i>Back to Site
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <!-- Statistics Cards -->
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card primary">
+                <div class="stat-value">{{ total_properties }}</div>
+                <div class="stat-label">Total Properties</div>
+                <div class="stat-change positive">
+                    <i class="bi bi-arrow-up"></i> {{ recent_properties }} this week
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card success">
+                <div class="stat-value">{{ verified_properties }}</div>
+                <div class="stat-label">Verified Properties</div>
+                <div class="stat-change">
+                    {{ verified_properties|floatformat:0 }}% verified
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card warning">
+                <div class="stat-value">{{ pending_properties }}</div>
+                <div class="stat-label">Pending Verification</div>
+                <div class="stat-change">
+                    Needs review
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card info">
+                <div class="stat-value">{{ total_users }}</div>
+                <div class="stat-label">Total Users</div>
+                <div class="stat-change positive">
+                    <i class="bi bi-arrow-up"></i> {{ recent_users }} this week
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card purple">
+                <div class="stat-value">{{ total_landlords }}</div>
+                <div class="stat-label">Verified Landlords</div>
+                <div class="stat-change warning">
+                    {{ pending_landlord_apps }} pending
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card info">
+                <div class="stat-value">{{ total_bookings }}</div>
+                <div class="stat-label">Total Bookings</div>
+                <div class="stat-change positive">
+                    <i class="bi bi-arrow-up"></i> {{ recent_bookings }} this week
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card warning">
+                <div class="stat-value">{{ pending_bookings }}</div>
+                <div class="stat-label">Pending Bookings</div>
+                <div class="stat-change">
+                    Needs attention
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-card success">
+                <div class="stat-value">KES {{ avg_price|floatformat:0 }}</div>
+                <div class="stat-label">Avg Property Price</div>
+                <div class="stat-change">
+                    Market average
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="bi bi-lightning-charge me-2"></i>Quick Actions</h2>
+        </div>
+        <div class="quick-actions">
+            <a href="/admin/properties/property/" class="action-btn">
+                <i class="bi bi-house-door"></i>
+                <strong>Manage Properties</strong>
+            </a>
+            <a href="/admin/properties/landlordapplication/" class="action-btn">
+                <i class="bi bi-person-check"></i>
+                <strong>Review Landlords</strong>
+            </a>
+            <a href="/admin/properties/booking/" class="action-btn">
+                <i class="bi bi-calendar-check"></i>
+                <strong>Manage Bookings</strong>
+            </a>
+            <a href="/admin/auth/user/" class="action-btn">
+                <i class="bi bi-people"></i>
+                <strong>Manage Users</strong>
+            </a>
+            <a href="/admin/properties/property/?verification_status__exact=pending" class="action-btn">
+                <i class="bi bi-shield-exclamation"></i>
+                <strong>Verify Properties</strong>
+            </a>
+            <a href="/admin/locations/county/" class="action-btn">
+                <i class="bi bi-geo-alt"></i>
+                <strong>Manage Locations</strong>
+            </a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Properties Needing Verification -->
+        <div class="col-md-6">
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="bi bi-shield-exclamation me-2"></i>Properties Pending Verification</h2>
+                    <a href="/admin/properties/property/?verification_status__exact=pending" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                {% if properties_to_verify %}
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Owner</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for property in properties_to_verify %}
+                            <tr>
+                                <td>
+                                    <strong>{{ property.name|truncatewords:5 }}</strong><br>
+                                    <small class="text-muted">{{ property.property_type|title }}</small>
+                                </td>
+                                <td>{{ property.owner.username }}</td>
+                                <td>
+                                    <span class="badge badge-custom bg-warning">{{ property.get_verification_status_display }}</span>
+                                </td>
+                                <td>
+                                    <a href="/admin/properties/property/{{ property.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Review
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+                    <p>No properties pending verification</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Pending Landlord Applications -->
+        <div class="col-md-6">
+            <div class="admin-section">
+                <div class="section-header">
+                    <h2 class="section-title"><i class="bi bi-person-plus me-2"></i>Pending Landlord Applications</h2>
+                    <a href="/admin/properties/landlordapplication/?status__exact=pending" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                {% if pending_applications %}
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for app in pending_applications %}
+                            <tr>
+                                <td><strong>{{ app.full_name }}</strong></td>
+                                <td>{{ app.email }}</td>
+                                <td>
+                                    <span class="badge badge-custom bg-warning">{{ app.get_status_display }}</span>
+                                </td>
+                                <td>
+                                    <a href="/admin/properties/landlordapplication/{{ app.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Review
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <i class="bi bi-check-circle" style="font-size: 3rem;"></i>
+                    <p>No pending applications</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Properties -->
+    <div class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="bi bi-clock-history me-2"></i>Recent Properties</h2>
+            <a href="/admin/properties/property/" class="btn btn-sm btn-primary">View All</a>
+        </div>
+        {% if latest_properties %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Property Name</th>
+                        <th>Type</th>
+                        <th>Price</th>
+                        <th>Owner</th>
+                        <th>Verification</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for property in latest_properties %}
+                    <tr>
+                        <td><strong>{{ property.name|truncatewords:4 }}</strong></td>
+                        <td>{{ property.property_type|title }}</td>
+                        <td>KES {{ property.price|floatformat:0 }}</td>
+                        <td>{{ property.owner.username }}</td>
+                        <td>
+                            {% if property.verification_status == 'approved' %}
+                                <span class="badge badge-custom bg-success">Verified</span>
+                            {% elif property.verification_status == 'pending' %}
+                                <span class="badge badge-custom bg-warning">Pending</span>
+                            {% else %}
+                                <span class="badge badge-custom bg-danger">{{ property.get_verification_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ property.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="/admin/properties/property/{{ property.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No properties yet</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Recent Bookings -->
+    <div class="admin-section">
+        <div class="section-header">
+            <h2 class="section-title"><i class="bi bi-calendar-event me-2"></i>Recent Bookings</h2>
+            <a href="/admin/properties/booking/" class="btn btn-sm btn-primary">View All</a>
+        </div>
+        {% if latest_bookings %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Guest</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in latest_bookings %}
+                    <tr>
+                        <td><strong>{{ booking.property.name|truncatewords:3 }}</strong></td>
+                        <td>{{ booking.name }}<br><small class="text-muted">{{ booking.email }}</small></td>
+                        <td>{{ booking.date|date:"M d, Y" }}</td>
+                        <td>{{ booking.time_slot }}</td>
+                        <td>
+                            {% if booking.status == 'confirmed' %}
+                                <span class="badge badge-custom bg-success">Confirmed</span>
+                            {% elif booking.status == 'pending' %}
+                                <span class="badge badge-custom bg-warning">Pending</span>
+                            {% else %}
+                                <span class="badge badge-custom bg-danger">{{ booking.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ booking.created_at|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="/admin/properties/booking/{{ booking.id }}/change/" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <p>No bookings yet</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

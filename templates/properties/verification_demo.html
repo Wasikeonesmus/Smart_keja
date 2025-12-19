@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Verification Status Demo - SmartKeja{% endblock %}
+
+{% block content %}
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h2 class="mb-4 text-center">Verification Status Display Demo</h2>
+                            <p class="text-center text-muted mb-5">
+                                Preview how verification statuses will be displayed to users
+                            </p>
+                            
+                            <div class="row g-4">
+                                <!-- Pending Status -->
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Pending Status</h5>
+                                    <div id="statusPending"></div>
+                                </div>
+                                
+                                <!-- Approved Status -->
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Approved Status</h5>
+                                    <div id="statusApproved"></div>
+                                </div>
+                                
+                                <!-- Partial Status -->
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Partial Match Status</h5>
+                                    <div id="statusPartial"></div>
+                                </div>
+                                
+                                <!-- Failed Status -->
+                                <div class="col-md-6">
+                                    <h5 class="mb-3">Failed Status</h5>
+                                    <div id="statusFailed"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-5 text-center">
+                                <a href="{% url 'list_property_wizard' %}" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to Property Listing
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="module">
+        import { VerificationStatus } from '{% static "js/components/verification-status.js" %}';
+        
+        // Initialize all verification status displays
+        document.addEventListener('DOMContentLoaded', function() {
+            new VerificationStatus('statusPending', 'pending');
+            new VerificationStatus('statusApproved', 'approved');
+            new VerificationStatus('statusPartial', 'partial');
+            new VerificationStatus('statusFailed', 'failed');
+        });
+    </script>
+{% endblock %}
+

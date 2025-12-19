@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartKeja Solutions - Smart Property Rental Platform{% endblock %}</title>
+    <meta name="description" content="Find verified rental properties in Kenya. Secure payments, trusted landlords, and digital leases.">
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/wizard.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="{% url 'home' %}">
+                <div class="logo-container me-2">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Shield -->
+                        <path d="M20 2L5 8V18C5 26 12 32 20 38C28 32 35 26 35 18V8L20 2Z" fill="#0D7377" stroke="#0D7377" stroke-width="0.5"/>
+                        <!-- House -->
+                        <path d="M20 12L12 18V28H16V22H24V28H28V18L20 12Z" fill="white" opacity="0.9"/>
+                        <rect x="18" y="20" width="4" height="4" fill="white" opacity="0.9"/>
+                        <!-- Checkmark -->
+                        <path d="M16 22L18 24L24 18" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                    </svg>
+                </div>
+                <div class="brand-text-container">
+                    <span class="brand-text-main">SMARTKEJA</span>
+                    <span class="brand-text-sub d-none d-md-inline">SOLUTIONS</span>
+                </div>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{% url 'search' %}">
+                            <i class="bi bi-search me-1"></i>Search
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{% url 'search' %}#listings">
+                            <i class="bi bi-grid me-1"></i>Listings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium" href="{% url 'list_property_wizard' %}">
+                            <i class="bi bi-plus-circle me-1"></i>List Property
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-medium d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>
+                            <span class="d-none d-md-inline">Account</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                            <li><a class="dropdown-item" href="{% url 'dashboard' %}">
+                                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                            </a></li>
+                            {% if user.is_staff or user.is_superuser %}
+                            <li><a class="dropdown-item" href="{% url 'custom_admin' %}">
+                                <i class="bi bi-shield-check me-2"></i>Admin Panel
+                            </a></li>
+                            {% endif %}
+                            <li><a class="dropdown-item" href="#role-switch">
+                                <i class="bi bi-arrow-repeat me-2"></i>Switch Role
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#wallet">
+                                <i class="bi bi-wallet2 me-2"></i>My Wallet
+                            </a></li>
+                            <li><a class="dropdown-item" href="#bookings">
+                                <i class="bi bi-calendar-check me-2"></i>My Bookings
+                            </a></li>
+                            <li><a class="dropdown-item" href="{% url 'landlord_apply' %}">
+                                <i class="bi bi-shield-check me-2"></i>Become Landlord
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item text-danger" href="{% url 'logout' %}?next={{ request.path }}">
+                                <i class="bi bi-box-arrow-right me-2"></i>Sign Out
+                            </a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="#notifications" title="Notifications">
+                            <i class="bi bi-bell fs-5"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                                3
+                            </span>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-outline-primary btn-sm me-2" href="{% url 'signup' %}">
+                            <i class="bi bi-person-plus me-1"></i>Sign Up
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary btn-sm" href="{% url 'login' %}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Sign In
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5 mt-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="logo-container me-2">
+                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M20 2L5 8V18C5 26 12 32 20 38C28 32 35 26 35 18V8L20 2Z" fill="#4CAF50" stroke="#0D7377" stroke-width="0.5"/>
+                                <path d="M20 12L12 18V28H16V22H24V28H28V18L20 12Z" fill="white" opacity="0.9"/>
+                                <rect x="18" y="20" width="4" height="4" fill="white" opacity="0.9"/>
+                                <path d="M16 22L18 24L24 18" stroke="#4CAF50" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h5 class="mb-0 fw-bold brand-text-main-footer">SMARTKEJA</h5>
+                            <p class="mb-0 small brand-text-sub-footer">SOLUTIONS</p>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-3">
+                        Your trusted platform for finding verified rental properties across Kenya. 
+                        Secure payments, trusted landlords, and digital leases. Smart solutions for smart living.
+                    </p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-white text-decoration-none fs-5" title="Facebook">
+                            <i class="bi bi-facebook"></i>
+                        </a>
+                        <a href="#" class="text-white text-decoration-none fs-5" title="Twitter">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="#" class="text-white text-decoration-none fs-5" title="Instagram">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                        <a href="#" class="text-white text-decoration-none fs-5" title="LinkedIn">
+                            <i class="bi bi-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-white text-decoration-none fs-5" title="WhatsApp">
+                            <i class="bi bi-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6 mb-4">
+                    <h6 class="mb-3 fw-semibold">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Press</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Blog</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6 mb-4">
+                    <h6 class="mb-3 fw-semibold">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Help Center</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Safety Tips</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Contact Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">FAQs</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6 mb-4">
+                    <h6 class="mb-3 fw-semibold">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Terms of Service</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none small">Cookie Policy</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-3 col-6 mb-4">
+                    <h6 class="mb-3 fw-semibold">Download App</h6>
+                    <a href="#" class="btn btn-outline-light btn-sm mb-2 w-100 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-apple me-2"></i>App Store
+                    </a>
+                    <a href="#" class="btn btn-outline-light btn-sm w-100 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-google-play me-2"></i>Google Play
+                    </a>
+                </div>
+            </div>
+            <hr class="my-4 bg-secondary opacity-25">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                    <p class="text-muted mb-0 small">&copy; 2025 SmartKeja. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <p class="text-muted mb-0 small">
+                        Made with <i class="bi bi-heart-fill text-danger"></i> in Kenya
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Main Application JS (ES6 Modules) -->
+    <script type="module" src="{% static 'js/main.js' %}"></script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

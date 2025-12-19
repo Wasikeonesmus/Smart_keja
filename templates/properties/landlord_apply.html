@@ -1,0 +1,606 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Become a Verified Landlord - SmartKeja Solutions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .landlord-apply-hero {
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        color: white;
+        padding: 60px 0;
+        margin-bottom: 40px;
+    }
+    
+    .verification-steps {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+        position: relative;
+    }
+    
+    .verification-steps::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.3);
+        z-index: 0;
+    }
+    
+    .step-item {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .step-number {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 10px;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    
+    .step-item.active .step-number {
+        background: white;
+        color: #2e7d32;
+    }
+    
+    .step-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .form-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .form-card-header {
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+    }
+    
+    .form-card-body {
+        padding: 40px;
+    }
+    
+    .form-section {
+        margin-bottom: 35px;
+    }
+    
+    .form-section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #2e7d32;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e9ecef;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .form-section-title i {
+        font-size: 1.3rem;
+    }
+    
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    .form-label .required {
+        color: #dc3545;
+        margin-left: 3px;
+    }
+    
+    .form-control-lg {
+        border-radius: 8px;
+        border: 2px solid #e0e0e0;
+        padding: 12px 16px;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control-lg:focus {
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.15);
+    }
+    
+    .form-text {
+        font-size: 0.85rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+    
+    .file-upload-area {
+        border: 2px dashed #dee2e6;
+        border-radius: 12px;
+        padding: 30px;
+        text-align: center;
+        background: #f8f9fa;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .file-upload-area:hover {
+        border-color: #2e7d32;
+        background: #f0f8f1;
+    }
+    
+    .file-upload-area.dragover {
+        border-color: #2e7d32;
+        background: #e8f5e9;
+    }
+    
+    .file-upload-icon {
+        font-size: 3rem;
+        color: #2e7d32;
+        margin-bottom: 15px;
+    }
+    
+    .btn-submit {
+        background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+        border: none;
+        padding: 14px 40px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+    
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+    }
+    
+    .benefits-list {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        margin-top: 30px;
+    }
+    
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+    }
+    
+    .benefit-item i {
+        color: #2e7d32;
+        font-size: 1.3rem;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .status-pending {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-rejected {
+        background: #f8d7da;
+        color: #721c24;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="landlord-apply-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="bi bi-shield-check me-3"></i>
+                    Become a Verified Landlord
+                </h1>
+                <p class="lead mb-4">
+                    Join SmartKeja's trusted network of verified property owners. 
+                    Get verified once and start listing your properties with confidence.
+                </p>
+                
+                <!-- Verification Steps -->
+                <div class="verification-steps">
+                    <div class="step-item active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Submit Application</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-label">ID Verification</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Get Approved</div>
+                    </div>
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Start Listing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Application Form -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Status Alert -->
+                {% if application and application.status != 'rejected' %}
+                    <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
+                        <i class="bi bi-info-circle me-2 fs-4"></i>
+                        <div>
+                            <strong>Application Status:</strong> 
+                            <span class="status-badge status-{{ application.status }}">
+                                {{ application.get_status_display }}
+                            </span>
+                            {% if application.status == 'pending' %}
+                                <p class="mb-0 mt-1 small">Your application is under review. We'll notify you once it's processed.</p>
+                            {% elif application.status == 'approved' %}
+                                <p class="mb-0 mt-1 small">Congratulations! You can now list properties on SmartKeja.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Application Form Card -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <h2 class="mb-0">
+                            <i class="bi bi-file-earmark-text me-2"></i>
+                            Landlord Verification Application
+                        </h2>
+                        <p class="mb-0 mt-2 opacity-75">Fill in your details to get started</p>
+                    </div>
+                    
+                    <div class="form-card-body">
+                        <form method="post" enctype="multipart/form-data" id="landlordForm" data-no-prevent="true">
+                            {% csrf_token %}
+                            
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger">
+                                    {{ form.non_field_errors }}
+                                </div>
+                            {% endif %}
+
+                            <!-- Personal Information Section -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="bi bi-person-circle"></i>
+                                    Personal Information
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="{{ form.full_name.id_for_label }}" class="form-label">
+                                        <i class="bi bi-person"></i>
+                                        Full Name
+                                        <span class="required">*</span>
+                                    </label>
+                                    {{ form.full_name }}
+                                    {% if form.full_name.help_text %}
+                                        <div class="form-text">{{ form.full_name.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.full_name.errors %}
+                                        <div class="text-danger small mt-1">{{ form.full_name.errors }}</div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <label for="{{ form.email.id_for_label }}" class="form-label">
+                                            <i class="bi bi-envelope"></i>
+                                            Email Address
+                                            <span class="required">*</span>
+                                        </label>
+                                        {{ form.email }}
+                                        {% if form.email.help_text %}
+                                            <div class="form-text">{{ form.email.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.email.errors %}
+                                            <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-6 mb-4">
+                                        <label for="{{ form.phone.id_for_label }}" class="form-label">
+                                            <i class="bi bi-telephone"></i>
+                                            Phone Number
+                                            <span class="required">*</span>
+                                        </label>
+                                        {{ form.phone }}
+                                        {% if form.phone.help_text %}
+                                            <div class="form-text">{{ form.phone.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.phone.errors %}
+                                            <div class="text-danger small mt-1">{{ form.phone.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ID Document Section -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="bi bi-file-earmark-pdf"></i>
+                                    Identity Verification
+                                </div>
+                                
+                                <div class="file-upload-area" id="fileUploadArea">
+                                    <div class="file-upload-icon">
+                                        <i class="bi bi-cloud-upload"></i>
+                                    </div>
+                                    <h5 class="mb-2">Upload Your ID Document</h5>
+                                    <p class="text-muted mb-3">
+                                        National ID, Passport, or KRA PIN Certificate
+                                    </p>
+                                    <div class="d-flex align-items-center gap-3">
+                                        {{ form.id_document }}
+                                        <label for="{{ form.id_document.id_for_label }}" class="btn btn-outline-primary mb-0">
+                                            <i class="bi bi-folder2-open me-2"></i>
+                                            Choose File
+                                        </label>
+                                    </div>
+                                    <div id="fileName" class="mt-3 fw-bold text-primary"></div>
+                                    {% if form.id_document.help_text %}
+                                        <div class="form-text mt-2">{{ form.id_document.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.id_document.errors %}
+                                        <div class="text-danger small mt-2">{{ form.id_document.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Location Information Section -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <i class="bi bi-geo-alt"></i>
+                                    Property Location (Optional)
+                                </div>
+                                <p class="text-muted mb-4">
+                                    Help us understand where your properties are located. This information helps us verify your application faster.
+                                </p>
+                                
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <label for="{{ form.county.id_for_label }}" class="form-label">
+                                            <i class="bi bi-map"></i>
+                                            County
+                                        </label>
+                                        {{ form.county }}
+                                        <datalist id="county-list">
+                                            <option value="Nairobi">
+                                            <option value="Mombasa">
+                                            <option value="Kisumu">
+                                            <option value="Nakuru">
+                                            <option value="Uasin Gishu">
+                                            <option value="Kiambu">
+                                            <option value="Meru">
+                                        </datalist>
+                                        {% if form.county.help_text %}
+                                            <div class="form-text">{{ form.county.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.county.errors %}
+                                            <div class="text-danger small mt-1">{{ form.county.errors }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+                                        <label for="{{ form.sub_county.id_for_label }}" class="form-label">
+                                            Sub-county
+                                        </label>
+                                        {{ form.sub_county }}
+                                        <datalist id="subcounty-list">
+                                            <option value="Westlands">
+                                            <option value="Nairobi West">
+                                            <option value="Nairobi South">
+                                            <option value="Nyali">
+                                            <option value="Kisumu Central">
+                                        </datalist>
+                                        {% if form.sub_county.errors %}
+                                            <div class="text-danger small mt-1">{{ form.sub_county.errors }}</div>
+                                        {% endif %}
+                                    </div>
+
+                                    <div class="col-md-4 mb-4">
+                                        <label for="{{ form.estate.id_for_label }}" class="form-label">
+                                            <i class="bi bi-house"></i>
+                                            Estate/Area
+                                        </label>
+                                        {{ form.estate }}
+                                        <datalist id="estate-list">
+                                            <option value="Kilimani">
+                                            <option value="Westlands">
+                                            <option value="Parklands">
+                                            <option value="Karen">
+                                            <option value="Lavington">
+                                            <option value="Nyali">
+                                        </datalist>
+                                        {% if form.estate.help_text %}
+                                            <div class="form-text">{{ form.estate.help_text }}</div>
+                                        {% endif %}
+                                        {% if form.estate.errors %}
+                                            <div class="text-danger small mt-1">{{ form.estate.errors }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="text-center mt-5">
+                                <button type="submit" class="btn btn-submit btn-lg" id="submitBtn">
+                                    <i class="bi bi-send me-2"></i>
+                                    Submit Application
+                                </button>
+                                <p class="text-muted mt-3 small">
+                                    <i class="bi bi-shield-lock me-1"></i>
+                                    Your information is secure and will only be used for verification purposes.
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Benefits Section -->
+                <div class="benefits-list">
+                    <h5 class="mb-4">
+                        <i class="bi bi-star-fill text-warning me-2"></i>
+                        Benefits of Being a Verified Landlord
+                    </h5>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>
+                            <strong>Trust Badge:</strong> Your listings get a verified badge, increasing tenant confidence
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>
+                            <strong>Priority Support:</strong> Get faster responses from our support team
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>
+                            <strong>Higher Visibility:</strong> Verified listings appear first in search results
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>
+                            <strong>Secure Platform:</strong> All transactions are protected and verified
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    // File upload area interaction
+    document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('{{ form.id_document.id_for_label }}');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const fileName = document.getElementById('fileName');
+        const chooseFileBtn = fileUploadArea?.querySelector('label[for="{{ form.id_document.id_for_label }}"]');
+
+        if (fileInput && fileUploadArea) {
+            // Style the file input to be visually hidden but still accessible for validation
+            // Use clip-path method which is more reliable for form validation
+            fileInput.style.position = 'absolute';
+            fileInput.style.left = '-9999px';
+            fileInput.style.width = '1px';
+            fileInput.style.height = '1px';
+            
+            // Update file name display
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files.length > 0) {
+                    fileName.textContent = '✓ Selected: ' + e.target.files[0].name;
+                    fileName.className = 'mt-3 fw-bold text-success';
+                    fileUploadArea.classList.add('border-success');
+                    fileUploadArea.style.borderColor = '#2e7d32';
+                }
+            });
+
+            // Make label clickable
+            if (chooseFileBtn) {
+                chooseFileBtn.style.cursor = 'pointer';
+                chooseFileBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    fileInput.click();
+                });
+            }
+
+            // Drag and drop
+            fileUploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.add('dragover');
+            });
+
+            fileUploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.remove('dragover');
+            });
+
+            fileUploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                fileUploadArea.classList.remove('dragover');
+                if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                    fileInput.files = e.dataTransfer.files;
+                    fileName.textContent = '✓ Selected: ' + e.dataTransfer.files[0].name;
+                    fileName.className = 'mt-3 fw-bold text-success';
+                    fileUploadArea.classList.add('border-success');
+                    fileUploadArea.style.borderColor = '#2e7d32';
+                    
+                    // Trigger change event
+                    const event = new Event('change', { bubbles: true });
+                    fileInput.dispatchEvent(event);
+                }
+            });
+
+            // Click upload area to trigger file input
+            fileUploadArea.addEventListener('click', function(e) {
+                if (e.target !== fileInput && e.target !== chooseFileBtn && !chooseFileBtn.contains(e.target)) {
+                    fileInput.click();
+                }
+            });
+        }
+        
+        // Ensure form submission works
+        const form = document.getElementById('landlordForm');
+        if (form) {
+            form.addEventListener('submit', function(e) {
+                // Check if file is selected
+                const fileInput = document.getElementById('{{ form.id_document.id_for_label }}');
+                if (fileInput && !fileInput.files || fileInput.files.length === 0) {
+                    e.preventDefault();
+                    alert('Please select an ID document to upload.');
+                    return false;
+                }
+                // Let form submit normally
+                return true;
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,566 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}List Your Property - SmartKeja{% endblock %}
+
+{% block content %}
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <h2 class="mb-4 text-center">List Your Property</h2>
+                            
+                            <!-- Step Wizard Container -->
+                            <div id="propertyWizard"></div>
+                            
+                            <!-- Verification Status Container (hidden initially) -->
+                            <div id="verificationStatus" style="display: none;" class="mt-4">
+                                <!-- Verification status will be displayed here after submission -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="module">
+        import { StepWizard } from '{% static "js/components/step-wizard.js" %}';
+        import { MapLocation } from '{% static "js/components/map-location.js" %}';
+        import { FileUploader } from '{% static "js/components/file-uploader.js" %}';
+        import { VerificationStatus } from '{% static "js/components/verification-status.js" %}';
+        import { showNotification } from '{% static "js/utils/helpers.js" %}';
+
+        let mapLocation = null;
+        let imageUploader = null;
+        let videoUploader = null;
+        let verificationStatus = null;
+
+        // Define wizard steps
+        const steps = [
+            {
+                label: 'Property Details',
+                render: (data, updateData) => {
+                    return createPropertyDetailsStep(data, updateData);
+                },
+                validate: (data) => {
+                    if (!data.name || !data.propertyType || !data.price) {
+                        showNotification('Please fill in all required fields', 'warning');
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            {
+                label: 'Media Upload',
+                render: (data, updateData) => {
+                    return createMediaUploadStep(data, updateData);
+                },
+                validate: (data) => {
+                    if (!data.images || data.images.length === 0) {
+                        showNotification('Please upload at least one property image', 'warning');
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            {
+                label: 'Location Verify',
+                render: (data, updateData) => {
+                    return createLocationVerifyStep(data, updateData);
+                },
+                validate: (data) => {
+                    if (!data.latitude || !data.longitude) {
+                        showNotification('Please select a location on the map', 'warning');
+                        return false;
+                    }
+                    if (!data.county || !data.estate) {
+                        showNotification('Please select county and estate', 'warning');
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            {
+                label: 'Submit Review',
+                render: (data, updateData) => {
+                    return createSubmitReviewStep(data, updateData);
+                },
+                validate: (data) => {
+                    return true;
+                }
+            }
+        ];
+
+        // Initialize wizard
+        const wizard = new StepWizard('propertyWizard', steps, {
+            onStepChange: (currentStep, previousStep, data) => {
+                console.log('Step changed:', currentStep, data);
+            },
+            onComplete: async (data) => {
+                await submitProperty(data);
+            }
+        });
+
+        // Step 1: Property Details
+        function createPropertyDetailsStep(data, updateData) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h4 class="mb-4">Property Information</h4>
+                
+                <!-- Property Type -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Property Type *</label>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="propertyType" id="typeApartment" value="apartment" ${data.propertyType === 'apartment' ? 'checked' : ''}>
+                            <label class="btn btn-outline-primary w-100 py-3" for="typeApartment">
+                                <i class="bi bi-building d-block fs-3 mb-2"></i>
+                                Apartment
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="propertyType" id="typeHouse" value="house" ${data.propertyType === 'house' ? 'checked' : ''}>
+                            <label class="btn btn-outline-primary w-100 py-3" for="typeHouse">
+                                <i class="bi bi-house-door d-block fs-3 mb-2"></i>
+                                House
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="propertyType" id="typeStudio" value="studio" ${data.propertyType === 'studio' ? 'checked' : ''}>
+                            <label class="btn btn-outline-primary w-100 py-3" for="typeStudio">
+                                <i class="bi bi-door-open d-block fs-3 mb-2"></i>
+                                Studio
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Property Name -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Property Name *</label>
+                    <input type="text" class="form-control" id="propertyName" value="${data.name || ''}" placeholder="e.g., Sunny Valley Apartments">
+                </div>
+                
+                <!-- Bedrooms & Bathrooms -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Bedrooms *</label>
+                        <select class="form-select" id="propertyBedrooms">
+                            <option value="">Select</option>
+                            <option value="0" ${data.bedrooms === 0 ? 'selected' : ''}>Studio</option>
+                            <option value="1" ${data.bedrooms === 1 ? 'selected' : ''}>1 Bedroom</option>
+                            <option value="2" ${data.bedrooms === 2 ? 'selected' : ''}>2 Bedrooms</option>
+                            <option value="3" ${data.bedrooms === 3 ? 'selected' : ''}>3 Bedrooms</option>
+                            <option value="4" ${data.bedrooms === 4 ? 'selected' : ''}>4+ Bedrooms</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Bathrooms *</label>
+                        <select class="form-select" id="propertyBathrooms">
+                            <option value="">Select</option>
+                            <option value="1" ${data.bathrooms === 1 ? 'selected' : ''}>1 Bathroom</option>
+                            <option value="2" ${data.bathrooms === 2 ? 'selected' : ''}>2 Bathrooms</option>
+                            <option value="3" ${data.bathrooms === 3 ? 'selected' : ''}>3 Bathrooms</option>
+                            <option value="4" ${data.bathrooms === 4 ? 'selected' : ''}>4+ Bathrooms</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Price -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Monthly Rent (KSh) *</label>
+                        <div class="input-group">
+                            <span class="input-group-text">KSh</span>
+                            <input type="number" class="form-control" id="propertyPrice" value="${data.price || ''}" placeholder="35,000">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Security Deposit (KSh) *</label>
+                        <div class="input-group">
+                            <span class="input-group-text">KSh</span>
+                            <input type="number" class="form-control" id="propertyDeposit" value="${data.deposit || ''}" placeholder="35,000">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Property Description *</label>
+                    <textarea class="form-control" id="propertyDescription" rows="5" placeholder="Describe your property...">${data.description || ''}</textarea>
+                </div>
+                
+                <!-- Amenities -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Amenities</label>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="amenityParking" ${data.amenities && data.amenities.includes('parking') ? 'checked' : ''}>
+                                <label class="form-check-label" for="amenityParking">
+                                    <i class="bi bi-car-front me-1"></i> Parking
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="amenitySecurity" ${data.amenities && data.amenities.includes('security') ? 'checked' : ''}>
+                                <label class="form-check-label" for="amenitySecurity">
+                                    <i class="bi bi-shield-check me-1"></i> 24/7 Security
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="amenityWifi" ${data.amenities && data.amenities.includes('wifi') ? 'checked' : ''}>
+                                <label class="form-check-label" for="amenityWifi">
+                                    <i class="bi bi-wifi me-1"></i> WiFi
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Add event listeners
+            setTimeout(() => {
+                document.getElementById('propertyName')?.addEventListener('input', (e) => {
+                    updateData({ name: e.target.value });
+                });
+                
+                document.querySelectorAll('input[name="propertyType"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        updateData({ propertyType: e.target.value });
+                    });
+                });
+                
+                document.getElementById('propertyBedrooms')?.addEventListener('change', (e) => {
+                    updateData({ bedrooms: parseInt(e.target.value) });
+                });
+                
+                document.getElementById('propertyBathrooms')?.addEventListener('change', (e) => {
+                    updateData({ bathrooms: parseInt(e.target.value) });
+                });
+                
+                document.getElementById('propertyPrice')?.addEventListener('input', (e) => {
+                    updateData({ price: parseFloat(e.target.value) });
+                });
+                
+                document.getElementById('propertyDeposit')?.addEventListener('input', (e) => {
+                    updateData({ deposit: parseFloat(e.target.value) });
+                });
+                
+                document.getElementById('propertyDescription')?.addEventListener('input', (e) => {
+                    updateData({ description: e.target.value });
+                });
+                
+                // Amenities
+                const amenityCheckboxes = ['amenityParking', 'amenitySecurity', 'amenityWifi'];
+                amenityCheckboxes.forEach(id => {
+                    document.getElementById(id)?.addEventListener('change', () => {
+                        const amenities = amenityCheckboxes
+                            .filter(aid => document.getElementById(aid)?.checked)
+                            .map(aid => aid.replace('amenity', '').toLowerCase());
+                        updateData({ amenities });
+                    });
+                });
+            }, 100);
+
+            return div;
+        }
+
+        // Step 2: Media Upload
+        function createMediaUploadStep(data, updateData) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h4 class="mb-4">Upload Property Media</h4>
+                
+                <!-- Image Upload -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Property Photos *</label>
+                    <p class="text-muted">Upload at least 5 photos. Max 20MB per photo.</p>
+                    <div id="imageUploader"></div>
+                </div>
+                
+                <!-- Video Upload (Optional) -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Property Video (Optional)</label>
+                    <div class="alert alert-info">
+                        <i class="bi bi-camera-video me-2"></i>
+                        Upload a video tour for AI verification and get a <strong>Verified Badge</strong>
+                    </div>
+                    <div id="videoUploader"></div>
+                </div>
+            `;
+
+            setTimeout(() => {
+                // Initialize image uploader
+                imageUploader = new FileUploader('imageUploader', {
+                    uploadUrl: '{% url "api_upload" %}',
+                    maxFiles: 20,
+                    acceptedTypes: ['image/*'],
+                    onUploadComplete: (fileItem, gpsData) => {
+                        const images = imageUploader.getFiles();
+                        updateData({ images });
+                        
+                        // If GPS coordinates found in image, auto-populate map
+                        if (gpsData && gpsData.latitude && gpsData.longitude) {
+                            console.log('Auto-populating map with GPS from image:', gpsData);
+                            updateData({
+                                latitude: gpsData.latitude,
+                                longitude: gpsData.longitude
+                            });
+                            
+                            // If map is already initialized, update it
+                            if (mapLocation) {
+                                mapLocation.setMarker(gpsData.latitude, gpsData.longitude);
+                                mapLocation.reverseGeocode(gpsData.latitude, gpsData.longitude);
+                            }
+                            
+                            showNotification('GPS coordinates extracted from image! Map will be updated when you reach location step.', 'success');
+                        }
+                    }
+                });
+
+                // Initialize video uploader
+                videoUploader = new FileUploader('videoUploader', {
+                    uploadUrl: '{% url "api_upload" %}',
+                    maxFiles: 1,
+                    acceptedTypes: ['video/*'],
+                    onUploadComplete: (fileItem) => {
+                        const videos = videoUploader.getFiles();
+                        updateData({ verification_video: videos[0] || null });
+                    }
+                });
+            }, 100);
+
+            return div;
+        }
+
+        // Step 3: Location Verify
+        function createLocationVerifyStep(data, updateData) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h4 class="mb-4">Select Property Location</h4>
+                
+                <!-- Location Hierarchy -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">County *</label>
+                        <select class="form-select" id="propertyCounty">
+                            <option value="">Select County</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Sub-county</label>
+                        <select class="form-select" id="propertySubCounty">
+                            <option value="">Select Sub-county</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Estate *</label>
+                        <select class="form-select" id="propertyEstate">
+                            <option value="">Select Estate</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Map -->
+                <div class="mb-4">
+                    <label class="form-label fw-bold">📍 Pin Location on Map *</label>
+                    <p class="text-muted mb-3">
+                        <i class="bi bi-cursor-fill text-primary"></i> 
+                        <strong>Click or tap anywhere on the map</strong> to drop a pin, or 
+                        <strong>drag the marker</strong> to adjust the exact location. 
+                        Coordinates are captured automatically - no manual entry needed!
+                    </p>
+                    <div id="mapContainer" class="map-container"></div>
+                    <small class="text-muted d-block mt-2">
+                        <i class="bi bi-info-circle"></i> 
+                        Use your mouse, touch screen, or stylus pen to interact with the map
+                    </small>
+                </div>
+            `;
+
+            setTimeout(() => {
+                // Ensure map container exists
+                const mapContainer = document.getElementById('mapContainer');
+                if (!mapContainer) {
+                    console.error('Map container not found');
+                    return;
+                }
+                
+                // Use GPS from image if available, otherwise use saved data or default
+                let initialLat = -1.2921; // Nairobi default
+                let initialLng = 36.8219;
+                
+                if (data.latitude && data.longitude) {
+                    initialLat = parseFloat(data.latitude);
+                    initialLng = parseFloat(data.longitude);
+                }
+                
+                // Initialize map
+                mapLocation = new MapLocation('mapContainer', {
+                    initialLocation: { lat: initialLat, lng: initialLng },
+                    onLocationChange: (coordinates, locationData) => {
+                        updateData({
+                            latitude: coordinates.lat,
+                            longitude: coordinates.lng,
+                            county: locationData.county,
+                            subCounty: locationData.subCounty,
+                            estate: locationData.estate
+                        });
+                        // Coordinates are saved automatically, no need to display them
+                    }
+                });
+                
+                // If GPS coordinates exist, set marker immediately
+                if (data.latitude && data.longitude) {
+                    setTimeout(() => {
+                        if (mapLocation && mapLocation.map) {
+                            mapLocation.setMarker(initialLat, initialLng);
+                            mapLocation.reverseGeocode(initialLat, initialLng);
+                        }
+                    }, 500);
+                }
+            }, 300);
+
+            return div;
+        }
+
+        // Step 4: Submit Review
+        function createSubmitReviewStep(data, updateData) {
+            const div = document.createElement('div');
+            div.innerHTML = `
+                <h4 class="mb-4">Review & Submit</h4>
+                
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Please review your property details before submitting. Your listing will be reviewed by our AI verification system.
+                </div>
+                
+                <!-- Summary -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Property Summary</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Name:</strong> ${data.name || 'Not set'}</p>
+                                <p><strong>Type:</strong> ${data.propertyType || 'Not set'}</p>
+                                <p><strong>Bedrooms:</strong> ${data.bedrooms !== undefined ? data.bedrooms : 'Not set'}</p>
+                                <p><strong>Bathrooms:</strong> ${data.bathrooms || 'Not set'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Price:</strong> KSh ${data.price ? data.price.toLocaleString() : 'Not set'}</p>
+                                <p><strong>Location:</strong> ${data.estate || 'Not set'}, ${data.county || 'Not set'}</p>
+                                <p><strong>Images:</strong> ${data.images ? data.images.length : 0} uploaded</p>
+                                <p><strong>Video:</strong> ${data.verification_video ? 'Yes' : 'No'}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Terms -->
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="agreeTerms">
+                    <label class="form-check-label" for="agreeTerms">
+                        I agree to the <a href="#">Terms of Service</a> and confirm that all information provided is accurate.
+                    </label>
+                </div>
+            `;
+
+            setTimeout(() => {
+                document.getElementById('agreeTerms')?.addEventListener('change', (e) => {
+                    updateData({ termsAgreed: e.target.checked });
+                });
+            }, 100);
+
+            return div;
+        }
+
+        // Submit property
+        async function submitProperty(data) {
+            const termsCheckbox = document.getElementById('agreeTerms');
+            if (!termsCheckbox?.checked) {
+                showNotification('Please agree to the terms and conditions', 'warning');
+                wizard.goToStep(3); // Go back to review step
+                return;
+            }
+
+            showNotification('Submitting property for verification...', 'info');
+
+            try {
+                const response = await fetch('{% url "api_submit_property" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCsrfToken()
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Hide wizard
+                    const wizardContainer = document.getElementById('propertyWizard');
+                    if (wizardContainer) {
+                        wizardContainer.style.display = 'none';
+                    }
+                    
+                    // Show verification status immediately
+                    const statusContainer = document.getElementById('verificationStatus');
+                    if (statusContainer) {
+                        statusContainer.style.display = 'block';
+                        statusContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                        // Initialize verification status component with pending status
+                        verificationStatus = new VerificationStatus('verificationStatus', result.property.verification_status || 'pending');
+                        
+                        // Add property ID and details
+                        const statusDiv = statusContainer.querySelector('.verification-status');
+                        if (statusDiv && result.property.id) {
+                            statusDiv.innerHTML += `
+                                <div class="mt-4 p-3 bg-light rounded">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <small class="text-muted d-block">Property ID: <strong>${result.property.id}</strong></small>
+                                            <small class="text-muted d-block mt-2">Verification Score: <strong>${result.property.verification_score || 0}%</strong></small>
+                                        </div>
+                                        <div class="col-md-6 text-md-end">
+                                            <small class="text-muted d-block">Status: <strong>${result.property.verification_status || 'Pending'}</strong></small>
+                                            ${result.property.ai_verification_result ? `<small class="text-muted d-block mt-2">AI Result: <strong>${result.property.ai_verification_result}</strong></small>` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    showNotification(result.property.message || 'Property submitted successfully!', 'success');
+                } else {
+                    showNotification(result.error || 'Submission failed', 'danger');
+                }
+            } catch (error) {
+                console.error('Error submitting property:', error);
+                showNotification('An error occurred. Please try again.', 'danger');
+            }
+        }
+
+        function getCsrfToken() {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [name, value] = cookie.trim().split('=');
+                if (name === 'csrftoken') {
+                    return value;
+                }
+            }
+            return '';
+        }
+    </script>
+{% endblock %}

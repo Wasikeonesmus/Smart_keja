@@ -1,0 +1,443 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/listings.css' %}">
+    <link rel="stylesheet" href="{% static 'css/listings-balance.css' %}">
+    <link rel="stylesheet" href="{% static 'css/property-card-redesign.css' %}">
+    <link rel="stylesheet" href="{% static 'css/spacing-optimization.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Search & Filter Section -->
+    <section id="search" class="py-5">
+        <div class="container-fluid px-4 px-lg-5">
+            <div class="row">
+                <!-- Filter Sidebar -->
+                <div class="col-lg-3 mb-4">
+                    <!-- Mobile Filter Toggle Button -->
+                    <button class="btn btn-primary w-100 d-lg-none mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#filterSidebar" aria-expanded="false" aria-controls="filterSidebar">
+                        <i class="bi bi-funnel me-2"></i>Toggle Filters
+                    </button>
+                    <div class="collapse d-lg-block" id="filterSidebar">
+                    <div class="filter-sidebar">
+                        <h5 class="mb-4">
+                            <i class="bi bi-funnel me-2"></i>Filters
+                        </h5>
+                        
+                        <!-- Location -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Location</label>
+                            <select class="form-select mb-2" id="filterCounty">
+                                <option value="">Select County</option>
+                                <option value="Nairobi">Nairobi</option>
+                                <option value="Mombasa">Mombasa</option>
+                                <option value="Kisumu">Kisumu</option>
+                            </select>
+                            <select class="form-select" id="filterEstate">
+                                <option value="">Select Estate</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Price Range -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Price Range</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="number" class="form-control" id="filterMinPrice" placeholder="Min">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" class="form-control" id="filterMaxPrice" placeholder="Max">
+                                </div>
+                            </div>
+                            <input type="range" class="form-range mt-2" id="priceRange" min="0" max="100000" value="50000">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>KSh 0</span>
+                                <span>KSh 100k+</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Bedrooms -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Bedrooms</label>
+                            <div class="btn-group w-100" role="group">
+                                <input type="radio" class="btn-check" name="bedrooms" id="bed1" value="1">
+                                <label class="btn btn-outline-primary" for="bed1">1</label>
+                                
+                                <input type="radio" class="btn-check" name="bedrooms" id="bed2" value="2">
+                                <label class="btn btn-outline-primary" for="bed2">2</label>
+                                
+                                <input type="radio" class="btn-check" name="bedrooms" id="bed3" value="3">
+                                <label class="btn btn-outline-primary" for="bed3">3</label>
+                                
+                                <input type="radio" class="btn-check" name="bedrooms" id="bed4" value="4">
+                                <label class="btn btn-outline-primary" for="bed4">4+</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Property Type -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Property Type</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="typeApartment" value="apartment">
+                                <label class="form-check-label" for="typeApartment">Apartment</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="typeHouse" value="house">
+                                <label class="form-check-label" for="typeHouse">House</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="typeStudio" value="studio">
+                                <label class="form-check-label" for="typeStudio">Studio</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Verification Status -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Verification</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="filterVerified" checked>
+                                <label class="form-check-label" for="filterVerified">Verified Only</label>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-primary w-100" id="applyFilters">Apply Filters</button>
+                        <button class="btn btn-outline-secondary w-100 mt-2" id="resetFilters">Reset</button>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Listings Grid -->
+                <div class="col-lg-9">
+                    <!-- Search Bar -->
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search by location, property name...">
+                                <button class="btn btn-primary" type="button" id="searchButton">
+                                    <i class="bi bi-search me-1"></i>Search
+                                </button>
+                            </div>
+                            <div id="activeFilters">
+                                <!-- Active filter badges will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- View Toggle & Results -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong id="resultsCount">0 properties found</strong>
+                        </div>
+                        <div class="btn-group view-toggle" role="group">
+                            <input type="radio" class="btn-check" name="view" id="gridView" checked>
+                            <label class="btn" for="gridView" title="Grid View">
+                                <i class="bi bi-grid-3x3-gap"></i>
+                            </label>
+                            
+                            <input type="radio" class="btn-check" name="view" id="listView">
+                            <label class="btn" for="listView" title="List View">
+                                <i class="bi bi-list"></i>
+                            </label>
+                            
+                            <input type="radio" class="btn-check" name="view" id="mapView">
+                            <label class="btn" for="mapView" title="Map View">
+                                <i class="bi bi-map"></i>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Property Cards -->
+                    <div class="row" id="listings">
+                        <!-- Properties will be dynamically loaded here -->
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <nav aria-label="Property listings pagination">
+                        <ul class="pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                    <i class="bi bi-chevron-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="page-item active" aria-current="page">
+                                <a class="page-link" href="#">1</a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">5</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">
+                                    Next <i class="bi bi-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Modal -->
+    {% include 'properties/booking_modal.html' %}
+    
+    <!-- Property Map Modal -->
+    <div class="modal fade" id="propertyMapModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-geo-alt-fill me-2"></i><span id="mapPropertyName"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div id="propertyMapContainer" style="height: 500px; width: 100%;"></div>
+                    <div class="p-3 bg-light">
+                        <p class="mb-2"><strong><i class="bi bi-geo-alt me-2"></i>Location:</strong> <span id="mapPropertyLocation"></span></p>
+                        <div class="d-flex gap-2">
+                            <a id="mapGoogleLink" href="#" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-google me-1"></i>Open in Google Maps
+                            </a>
+                            <a id="mapDirectionsLink" href="#" target="_blank" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-signpost-2 me-1"></i>Get Directions
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // Set Django API URL
+        window.DJANGO_API_URL = '{% url "api_properties" %}';
+        window.DJANGO_BOOKING_API_URL = '{% url "api_booking" %}';
+        
+        // Property map function
+        function showPropertyMap(lat, lng, propertyName, propertyLocation) {
+            const modal = new bootstrap.Modal(document.getElementById('propertyMapModal'));
+            document.getElementById('mapPropertyName').textContent = propertyName;
+            document.getElementById('mapPropertyLocation').textContent = propertyLocation;
+            
+            // Set Google Maps links
+            document.getElementById('mapGoogleLink').href = `https://www.google.com/maps?q=${lat},${lng}`;
+            document.getElementById('mapDirectionsLink').href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            
+            // Initialize map when modal is shown
+            const mapContainer = document.getElementById('propertyMapContainer');
+            mapContainer.innerHTML = ''; // Clear previous map
+            
+            modal.show();
+            
+            // Wait for modal to be fully shown before initializing map
+            document.getElementById('propertyMapModal').addEventListener('shown.bs.modal', function initMap() {
+                // Use Leaflet for map (if available) or simple iframe
+                if (typeof L !== 'undefined') {
+                    const map = L.map('propertyMapContainer').setView([lat, lng], 15);
+                    
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors',
+                        maxZoom: 19
+                    }).addTo(map);
+                    
+                    L.marker([lat, lng]).addTo(map)
+                        .bindPopup(`<strong>${propertyName}</strong><br>${propertyLocation}`)
+                        .openPopup();
+                } else {
+                    // Fallback: Use Google Maps embed
+                    mapContainer.innerHTML = `
+                        <iframe 
+                            width="100%" 
+                            height="500" 
+                            style="border:0" 
+                            loading="lazy" 
+                            allowfullscreen
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d-s6O4ZU9xN0TQ&q=${lat},${lng}&zoom=15">
+                        </iframe>
+                    `;
+                }
+                
+                // Remove listener after first use
+                document.getElementById('propertyMapModal').removeEventListener('shown.bs.modal', initMap);
+            }, { once: true });
+        }
+        
+        // Initialize maps directly in listings when properties load
+        function initializePropertyMaps() {
+            const mapContainers = document.querySelectorAll('.property-map-container');
+            if (mapContainers.length === 0) return;
+            
+            // Function to initialize a single map
+            function initMap(container) {
+                const lat = parseFloat(container.getAttribute('data-lat'));
+                const lng = parseFloat(container.getAttribute('data-lng'));
+                
+                if (!lat || !lng || isNaN(lat) || isNaN(lng)) {
+                    // If no valid coordinates, show a message
+                    container.innerHTML = '<div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light text-muted"><small>Map location not available</small></div>';
+                    return;
+                }
+                
+                // Check if map already initialized (has leaflet-container class)
+                if (container.querySelector('.leaflet-container')) {
+                    return;
+                }
+                
+                if (typeof L !== 'undefined') {
+                    try {
+                        // Clear loading spinner
+                        container.innerHTML = '';
+                        
+                        // Create map
+                        const map = L.map(container, {
+                            zoomControl: true,
+                            dragging: true,
+                            touchZoom: true,
+                            doubleClickZoom: true,
+                            scrollWheelZoom: false, // Disable scroll zoom in cards
+                            boxZoom: false,
+                            keyboard: false
+                        }).setView([lat, lng], 15);
+                        
+                        // Add tile layer
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                            maxZoom: 19
+                        }).addTo(map);
+                        
+                        // Add marker with popup showing property name
+                        const propertyId = container.getAttribute('data-property-id');
+                        const marker = L.marker([lat, lng], {
+                            icon: L.icon({
+                                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                                iconSize: [25, 41],
+                                iconAnchor: [12, 41],
+                                popupAnchor: [1, -34],
+                                shadowSize: [41, 41]
+                            })
+                        }).addTo(map);
+                        
+                        // Store map instance for later use
+                        container._map = map;
+                        
+                        // Invalidate size after a delay to ensure proper rendering
+                        setTimeout(() => {
+                            map.invalidateSize();
+                        }, 100);
+                    } catch (error) {
+                        console.error('Error initializing map:', error);
+                        // Fallback: show Google Maps embed
+                        container.innerHTML = `
+                            <iframe 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0" 
+                                loading="lazy" 
+                                allowfullscreen
+                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d-s6O4ZU9xN0TQ&q=${lat},${lng}&zoom=15">
+                            </iframe>
+                        `;
+                    }
+                } else {
+                    // Leaflet not loaded yet, show loading state
+                    container.innerHTML = '<div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light"><div class="spinner-border spinner-border-sm text-primary" role="status"><span class="visually-hidden">Loading map...</span></div></div>';
+                }
+            }
+            
+            // Load Leaflet CSS and JS for maps if not already loaded
+            if (!document.querySelector('link[href*="leaflet"]')) {
+                const leafletCSS = document.createElement('link');
+                leafletCSS.rel = 'stylesheet';
+                leafletCSS.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+                leafletCSS.integrity = 'sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=';
+                leafletCSS.crossOrigin = '';
+                document.head.appendChild(leafletCSS);
+            }
+            
+            if (!document.querySelector('script[src*="leaflet"]')) {
+                const leafletJS = document.createElement('script');
+                leafletJS.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+                leafletJS.integrity = 'sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=';
+                leafletJS.crossOrigin = '';
+                leafletJS.onload = function() {
+                    // Wait a bit for Leaflet to fully initialize
+                    setTimeout(() => {
+                        mapContainers.forEach(container => initMap(container));
+                    }, 300);
+                };
+                leafletJS.onerror = function() {
+                    // If Leaflet fails to load, use Google Maps embed as fallback
+                    mapContainers.forEach(container => {
+                        const lat = parseFloat(container.getAttribute('data-lat'));
+                        const lng = parseFloat(container.getAttribute('data-lng'));
+                        if (lat && lng) {
+                            container.innerHTML = `
+                                <iframe 
+                                    width="100%" 
+                                    height="100%" 
+                                    style="border:0" 
+                                    loading="lazy" 
+                                    allowfullscreen
+                                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d-s6O4ZU9xN0TQ&q=${lat},${lng}&zoom=15">
+                                </iframe>
+                            `;
+                        }
+                    });
+                };
+                document.head.appendChild(leafletJS);
+            } else if (typeof L !== 'undefined') {
+                // Leaflet already loaded, initialize maps immediately
+                setTimeout(() => {
+                    mapContainers.forEach(container => initMap(container));
+                }, 100);
+            } else {
+                // Wait for Leaflet to be available
+                let attempts = 0;
+                const checkLeaflet = setInterval(() => {
+                    attempts++;
+                    if (typeof L !== 'undefined') {
+                        clearInterval(checkLeaflet);
+                        setTimeout(() => {
+                            mapContainers.forEach(container => initMap(container));
+                        }, 100);
+                    } else if (attempts > 20) {
+                        // Give up after 2 seconds
+                        clearInterval(checkLeaflet);
+                    }
+                }, 100);
+            }
+        }
+        
+        // Initialize when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializePropertyMaps);
+        } else {
+            initializePropertyMaps();
+        }
+        
+        // Hook into PropertyListings to initialize maps after rendering
+        // Wait for PropertyListings class to be available
+        setTimeout(() => {
+            if (window.PropertyListings) {
+                const originalRender = PropertyListings.prototype.renderProperties;
+                PropertyListings.prototype.renderProperties = function() {
+                    const result = originalRender.call(this);
+                    setTimeout(initializePropertyMaps, 800);
+                    return result;
+                };
+            }
+        }, 500);
+        
+        // Also listen for custom event if PropertyListings fires one
+        document.addEventListener('propertiesRendered', initializePropertyMaps);
+    </script>
+{% endblock %}
+

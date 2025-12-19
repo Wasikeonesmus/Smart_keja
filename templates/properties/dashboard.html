@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard - SmartKeja Solutions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .dashboard-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .stat-card {
+        background: white;
+        border-radius: var(--sk-border-radius-lg);
+        padding: 1.5rem;
+        box-shadow: var(--sk-shadow-sm);
+        border-left: 4px solid var(--sk-primary);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--sk-shadow-md);
+    }
+    
+    .stat-card.verified {
+        border-left-color: #4CAF50;
+    }
+    
+    .stat-card.pending {
+        border-left-color: #FF9800;
+    }
+    
+    .stat-card.bookings {
+        border-left-color: #2196F3;
+    }
+    
+    .stat-card.wallet {
+        border-left-color: #9C27B0;
+    }
+    
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--sk-primary);
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .dashboard-section {
+        background: white;
+        border-radius: var(--sk-border-radius-lg);
+        padding: 1.5rem;
+        box-shadow: var(--sk-shadow-sm);
+        margin-bottom: 2rem;
+    }
+    
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--sk-primary);
+    }
+    
+    .property-item, .booking-item {
+        padding: 1rem;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .property-item:last-child, .booking-item:last-child {
+        border-bottom: none;
+    }
+    
+    .property-item:hover, .booking-item:hover {
+        background: #f9f9f9;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 3rem;
+        color: #999;
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="fw-bold">Dashboard</h1>
+            <p class="text-muted">Welcome back, {{ user.get_full_name|default:user.username }}!</p>
+        </div>
+    </div>
+    
+    <!-- Stats Cards -->
+    <div class="dashboard-stats">
+        {% if is_landlord %}
+        <div class="stat-card verified">
+            <div class="stat-value">{{ verified_properties }}</div>
+            <div class="stat-label">Verified Properties</div>
+        </div>
+        <div class="stat-card pending">
+            <div class="stat-value">{{ pending_properties }}</div>
+            <div class="stat-label">Pending Verification</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">{{ total_properties }}</div>
+            <div class="stat-label">Total Properties</div>
+        </div>
+        {% endif %}
+        
+        <div class="stat-card bookings">
+            <div class="stat-value">{{ total_bookings }}</div>
+            <div class="stat-label">Total Bookings</div>
+        </div>
+        
+        {% if wallet_balance is not None %}
+        <div class="stat-card wallet">
+            <div class="stat-value">KES {{ wallet_balance|floatformat:2 }}</div>
+            <div class="stat-label">Wallet Balance</div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2 class="section-title">Quick Actions</h2>
+        </div>
+        <div class="row g-3">
+            {% if is_landlord %}
+            <div class="col-md-3">
+                <a href="{% url 'list_property_wizard' %}" class="btn btn-primary w-100">
+                    <i class="bi bi-plus-circle me-2"></i>List New Property
+                </a>
+            </div>
+            {% else %}
+            <div class="col-md-3">
+                <a href="{% url 'landlord_apply' %}" class="btn btn-primary w-100">
+                    <i class="bi bi-house-door me-2"></i>Become a Landlord
+                </a>
+            </div>
+            {% endif %}
+            <div class="col-md-3">
+                <a href="{% url 'search' %}" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-search me-2"></i>Search Properties
+                </a>
+            </div>
+            {% if is_landlord %}
+            <div class="col-md-3">
+                <a href="/admin/properties/property/" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-gear me-2"></i>Manage Properties
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Landlord Section -->
+    {% if is_landlord %}
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2 class="section-title">My Properties</h2>
+            <a href="{% url 'list_property_wizard' %}" class="btn btn-sm btn-primary">
+                <i class="bi bi-plus me-1"></i>Add Property
+            </a>
+        </div>
+        
+        {% if user_properties %}
+        <div class="list-group">
+            {% for property in user_properties %}
+            <div class="property-item">
+                <div>
+                    <h5 class="mb-1">{{ property.name }}</h5>
+                    <p class="text-muted mb-1 small">
+                        {{ property.property_type|title }} • KES {{ property.price|floatformat:0 }}/month
+                    </p>
+                    <span class="badge 
+                        {% if property.verification_status == 'approved' %}bg-success
+                        {% elif property.verification_status == 'pending' %}bg-warning
+                        {% elif property.verification_status == 'rejected' %}bg-danger
+                        {% else %}bg-secondary{% endif %}">
+                        {{ property.get_verification_status_display }}
+                    </span>
+                    {% if property.ai_verification_result %}
+                    <span class="badge bg-info ms-2">{{ property.ai_verification_result }}</span>
+                    {% endif %}
+                </div>
+                <div>
+                    <a href="/admin/properties/property/{{ property.id }}/change/" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil me-1"></i>Edit
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-house"></i>
+            <p>You haven't listed any properties yet.</p>
+            <a href="{% url 'list_property_wizard' %}" class="btn btn-primary">List Your First Property</a>
+        </div>
+        {% endif %}
+    </div>
+    {% elif landlord_application %}
+    <div class="dashboard-section">
+        <div class="alert alert-info">
+            <h5><i class="bi bi-info-circle me-2"></i>Landlord Application Status</h5>
+            <p class="mb-0">Your landlord application is <strong>{{ landlord_application.get_status_display }}</strong>.</p>
+            <a href="{% url 'landlord_status' %}" class="btn btn-sm btn-outline-primary mt-2">View Details</a>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Bookings Section -->
+    <div class="dashboard-section">
+        <div class="section-header">
+            <h2 class="section-title">My Bookings</h2>
+            <a href="{% url 'search' %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-search me-1"></i>Book Viewing
+            </a>
+        </div>
+        
+        {% if user_bookings %}
+        <div class="list-group">
+            {% for booking in user_bookings %}
+            <div class="booking-item">
+                <div>
+                    <h5 class="mb-1">{{ booking.property.name }}</h5>
+                    <p class="text-muted mb-1 small">
+                        <i class="bi bi-calendar me-1"></i>{{ booking.date|date:"M d, Y" }} at {{ booking.time_slot }}
+                    </p>
+                    <span class="badge 
+                        {% if booking.status == 'confirmed' %}bg-success
+                        {% elif booking.status == 'pending' %}bg-warning
+                        {% elif booking.status == 'cancelled' %}bg-danger
+                        {% else %}bg-secondary{% endif %}">
+                        {{ booking.get_status_display }}
+                    </span>
+                </div>
+                <div>
+                    <span class="text-muted small">{{ booking.created_at|date:"M d" }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="bi bi-calendar-check"></i>
+            <p>You haven't made any bookings yet.</p>
+            <a href="{% url 'search' %}" class="btn btn-primary">Browse Properties</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

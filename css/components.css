@@ -1,0 +1,312 @@
+/* ============================================
+   SmartKeja - Component Styles
+   ============================================ */
+
+/* ============================================
+   Trust Badge
+   ============================================ */
+
+.trust-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+/* ============================================
+   Feature Icons
+   ============================================ */
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--sk-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 15px;
+    transition: transform 0.3s ease;
+}
+
+.feature-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* ============================================
+   Filter Sidebar
+   ============================================ */
+
+.filter-sidebar {
+    background: var(--sk-light);
+    border-radius: var(--sk-border-radius);
+    padding: 20px;
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.filter-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-sidebar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb {
+    background: var(--sk-primary);
+    border-radius: 10px;
+}
+
+/* ============================================
+   Stat Cards
+   ============================================ */
+
+.stat-card {
+    background: linear-gradient(135deg, var(--sk-primary) 0%, var(--sk-dark) 100%);
+    color: white;
+    border-radius: var(--sk-border-radius);
+    padding: 25px;
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
+/* ============================================
+   Booking Calendar
+   ============================================ */
+
+.booking-calendar {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.calendar-day {
+    padding: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid #f0f0f0;
+    user-select: none;
+}
+
+.calendar-day:hover:not(.text-muted):not(.disabled) {
+    background: #e9ecef;
+    transform: scale(1.05);
+}
+
+.calendar-day.available {
+    background: #d4edda;
+    color: #155724;
+}
+
+.calendar-day.selected {
+    background: var(--sk-primary);
+    color: white;
+    font-weight: bold;
+}
+
+.calendar-day.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   Time Slots
+   ============================================ */
+
+.time-slot {
+    padding: 10px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    user-select: none;
+}
+
+.time-slot:hover:not(.disabled) {
+    border-color: var(--sk-primary);
+    background: #f0f8f1;
+    transform: scale(1.05);
+}
+
+.time-slot.selected {
+    background: var(--sk-primary);
+    color: white;
+    border-color: var(--sk-primary);
+    font-weight: bold;
+}
+
+.time-slot.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8f9fa;
+}
+
+/* ============================================
+   Dashboard Navigation
+   ============================================ */
+
+.dashboard-nav {
+    background: white;
+    border-radius: var(--sk-border-radius);
+    padding: 20px;
+    box-shadow: var(--sk-shadow);
+}
+
+.metric-card {
+    border-left: 4px solid var(--sk-primary);
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    box-shadow: var(--sk-shadow);
+    transform: translateX(5px);
+}
+
+/* ============================================
+   Form Elements
+   ============================================ */
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--sk-primary);
+    box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: var(--sk-primary);
+    border-color: var(--sk-primary);
+}
+
+/* ============================================
+   View Toggle
+   ============================================ */
+
+.view-toggle {
+    display: flex;
+    gap: 5px;
+}
+
+.view-toggle .btn {
+    border-radius: 6px;
+}
+
+.view-toggle .btn-check:checked + .btn {
+    background-color: var(--sk-primary);
+    border-color: var(--sk-primary);
+    color: white;
+}
+
+/* ============================================
+   Property Listings Grid/List View
+   ============================================ */
+
+.listings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.listings-list .property-card {
+    display: flex;
+    flex-direction: row;
+    max-width: 100%;
+}
+
+.listings-list .property-card img {
+    width: 300px;
+    height: 200px;
+    flex-shrink: 0;
+}
+
+.listings-list .property-card .card-body {
+    flex: 1;
+}
+
+/* ============================================
+   Loading States
+   ============================================ */
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   Responsive Utilities
+   ============================================ */
+
+@media (max-width: 768px) {
+    .filter-sidebar {
+        position: static;
+        max-height: none;
+    }
+    
+    .listings-list .property-card {
+        flex-direction: column;
+    }
+    
+    .listings-list .property-card img {
+        width: 100%;
+        height: 220px;
+    }
+}
+

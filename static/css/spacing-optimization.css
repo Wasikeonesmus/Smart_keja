@@ -1,0 +1,204 @@
+/* ============================================
+   Spacing Optimization & Alignment
+   Remove excess white space and ensure professional alignment
+   ============================================ */
+
+/* Remove all unnecessary margins and padding */
+* {
+    box-sizing: border-box;
+}
+
+/* Container optimization */
+#search .container-fluid {
+    width: 100%;
+    max-width: 1400px;
+}
+
+/* Row optimization */
+#search .row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+}
+
+/* Card spacing optimization */
+.property-card {
+    margin: 0;
+    padding: 0;
+}
+
+/* Remove gaps between sections */
+.property-info-section > * {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.property-info-section > *:first-child {
+    margin-top: 0;
+}
+
+.property-info-section > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Filter sidebar optimization */
+.filter-sidebar > * {
+    margin-top: 0;
+}
+
+.filter-sidebar > *:first-child {
+    margin-top: 0;
+}
+
+.filter-sidebar > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Search card optimization */
+#search .card {
+    margin-bottom: 20px;
+}
+
+#search .card:last-child {
+    margin-bottom: 0;
+}
+
+/* Listings grid - tight spacing */
+#listings {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#listings .row {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Ensure proper alignment */
+.property-card,
+.property-image-wrapper,
+.property-info-section,
+.property-map-section {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Text alignment */
+.property-title,
+.property-location,
+.property-description {
+    text-align: left;
+}
+
+.property-features,
+.property-pricing,
+.trust-score-section {
+    width: 100%;
+}
+
+/* Map section alignment */
+.property-map-section {
+    width: 100%;
+    margin-top: 0;
+}
+
+.map-header,
+.map-actions {
+    width: 100%;
+}
+
+/* Responsive spacing adjustments */
+@media (max-width: 1200px) {
+    #search {
+        padding: 28px 0;
+    }
+}
+
+@media (max-width: 992px) {
+    #search {
+        padding: 24px 0;
+    }
+    
+    .listings-grid {
+        gap: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    #search {
+        padding: 20px 0;
+    }
+    
+    .listings-grid {
+        gap: 16px;
+    }
+    
+    #search .card {
+        margin-bottom: 16px;
+    }
+}
+
+@media (max-width: 576px) {
+    #search {
+        padding: 16px 0;
+    }
+    
+    .listings-grid {
+        gap: 14px;
+    }
+    
+    #search .card {
+        margin-bottom: 14px;
+    }
+    
+    .pagination {
+        margin-top: 24px;
+        flex-wrap: wrap;
+    }
+    
+    .pagination .page-link {
+        padding: 6px 10px;
+        font-size: 0.85rem;
+        min-width: 36px;
+    }
+}
+
+/* Ensure no overflow */
+.property-card,
+.property-image-wrapper,
+.property-info-section,
+.property-map-section {
+    overflow: hidden;
+}
+
+/* Perfect alignment for all elements */
+.property-header,
+.property-location,
+.property-features,
+.property-pricing,
+.trust-score-section,
+.map-header,
+.map-actions {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Property info section spacing - override if needed */
+.property-info-section {
+    padding: 20px !important;
+}
+
+@media (max-width: 768px) {
+    .property-info-section {
+        padding: 16px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .property-info-section {
+        padding: 14px !important;
+    }
+}
+

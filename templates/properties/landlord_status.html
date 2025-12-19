@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Landlord Verification Status - SmartKeja Solutions{% endblock %}
+
+{% block extra_css %}
+<style>
+    .status-container {
+        min-height: calc(100vh - 300px);
+        display: flex;
+        align-items: center;
+        padding: 3rem 0;
+    }
+    
+    .status-card {
+        border: none;
+        border-radius: var(--sk-border-radius-lg);
+        box-shadow: var(--sk-shadow-lg);
+        overflow: hidden;
+        background: white;
+    }
+    
+    .status-header {
+        background: linear-gradient(135deg, var(--sk-primary) 0%, var(--sk-primary-dark) 100%);
+        color: white;
+        padding: 2.5rem;
+        text-align: center;
+    }
+    
+    .status-body {
+        padding: 2.5rem;
+    }
+    
+    .status-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+    }
+    
+    .status-pending .status-icon {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved .status-icon {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-rejected .status-icon {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1.25rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .status-pending .status-badge {
+        background: #fff3cd;
+        color: #856404;
+    }
+    
+    .status-approved .status-badge {
+        background: #d4edda;
+        color: #155724;
+    }
+    
+    .status-rejected .status-badge {
+        background: #f8d7da;
+        color: #721c24;
+    }
+    
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-label {
+        font-weight: 600;
+        color: #6c757d;
+    }
+    
+    .info-value {
+        color: #212529;
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 0.5rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -1.75rem;
+        top: 0.25rem;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #6c757d;
+        border: 2px solid white;
+        box-shadow: 0 0 0 2px #e9ecef;
+    }
+    
+    .timeline-item.completed::before {
+        background: var(--sk-primary);
+        box-shadow: 0 0 0 2px var(--sk-primary);
+    }
+    
+    .timeline-item.active::before {
+        background: var(--sk-checkmark);
+        box-shadow: 0 0 0 2px var(--sk-checkmark);
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="status-container bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="status-card status-{{ application.status }}">
+                    <div class="status-header">
+                        <h2 class="mb-2 fw-bold">
+                            <i class="bi bi-shield-check me-2"></i>Verification Status
+                        </h2>
+                        <p class="mb-0 opacity-90">Your landlord application review</p>
+                    </div>
+                    
+                    <div class="status-body">
+                        {% if application.status == 'pending' %}
+                            <div class="text-center mb-4">
+                                <div class="status-icon">
+                                    <i class="bi bi-clock-history"></i>
+                                </div>
+                                <h3 class="mb-3">Application Under Review</h3>
+                                <span class="status-badge">Pending Approval</span>
+                                <p class="text-muted mt-3">
+                                    Your application has been submitted successfully and is currently being reviewed by our team.
+                                </p>
+                            </div>
+                            
+                            <div class="alert alert-info d-flex align-items-start">
+                                <i class="bi bi-info-circle me-2 fs-5"></i>
+                                <div>
+                                    <strong>What happens next?</strong>
+                                    <ul class="mb-0 mt-2">
+                                        <li>Our team will verify your ID document</li>
+                                        <li>We'll review your application details</li>
+                                        <li>You'll receive an email notification once a decision is made</li>
+                                        <li>Typical review time: <strong>24-48 hours</strong></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline">
+                                <div class="timeline-item completed">
+                                    <strong>Application Submitted</strong>
+                                    <p class="text-muted small mb-0">{{ application.created_at|date:"F d, Y g:i A" }}</p>
+                                </div>
+                                <div class="timeline-item active">
+                                    <strong>Under Review</strong>
+                                    <p class="text-muted small mb-0">Our team is reviewing your application</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <strong>Decision</strong>
+                                    <p class="text-muted small mb-0">Awaiting review completion</p>
+                                </div>
+                            </div>
+                            
+                        {% elif application.status == 'approved' %}
+                            <div class="text-center mb-4">
+                                <div class="status-icon">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </div>
+                                <h3 class="mb-3 text-success">Application Approved!</h3>
+                                <span class="status-badge">Verified Landlord</span>
+                                <p class="text-muted mt-3">
+                                    Congratulations! You're now a verified landlord on SmartKeja Solutions.
+                                </p>
+                            </div>
+                            
+                            <div class="alert alert-success">
+                                <i class="bi bi-check-circle me-2"></i>
+                                <strong>You can now:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>List properties for rent</li>
+                                    <li>Get verified badges on your listings</li>
+                                    <li>Access landlord dashboard features</li>
+                                    <li>Receive priority support</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <a href="{% url 'list_property_wizard' %}" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-plus-circle me-2"></i>List Your First Property
+                                </a>
+                                <a href="{% url 'search' %}" class="btn btn-outline-primary">
+                                    <i class="bi bi-search me-2"></i>Browse Properties
+                                </a>
+                            </div>
+                            
+                        {% elif application.status == 'rejected' %}
+                            <div class="text-center mb-4">
+                                <div class="status-icon">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </div>
+                                <h3 class="mb-3 text-danger">Application Rejected</h3>
+                                <span class="status-badge">Not Approved</span>
+                            </div>
+                            
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                <strong>Your application was not approved.</strong>
+                                {% if application.review_notes %}
+                                    <p class="mb-0 mt-2">{{ application.review_notes }}</p>
+                                {% else %}
+                                    <p class="mb-0 mt-2">Please review your application and try again.</p>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <a href="{% url 'landlord_apply' %}" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>Update Application
+                                </a>
+                                <a href="{% url 'search' %}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to Search
+                                </a>
+                            </div>
+                        {% endif %}
+                        
+                        <hr class="my-4">
+                        
+                        <h5 class="mb-3">Application Details</h5>
+                        <div class="info-item">
+                            <span class="info-label">Full Name:</span>
+                            <span class="info-value">{{ application.full_name }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value">{{ application.email }}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span class="info-value">{{ application.phone }}</span>
+                        </div>
+                        {% if application.county %}
+                        <div class="info-item">
+                            <span class="info-label">Location:</span>
+                            <span class="info-value">
+                                {{ application.estate }}{% if application.sub_county %}, {{ application.sub_county }}{% endif %}{% if application.county %}, {{ application.county }}{% endif %}
+                            </span>
+                        </div>
+                        {% endif %}
+                        <div class="info-item">
+                            <span class="info-label">Submitted:</span>
+                            <span class="info-value">{{ application.created_at|date:"F d, Y g:i A" }}</span>
+                        </div>
+                        {% if application.updated_at != application.created_at %}
+                        <div class="info-item">
+                            <span class="info-label">Last Updated:</span>
+                            <span class="info-value">{{ application.updated_at|date:"F d, Y g:i A" }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,784 @@
+/* ============================================
+   SmartKeja - Listings Page Styles
+   Professional Design with Golden Ratio
+   ============================================ */
+
+/* Golden Ratio Constants */
+:root {
+    --phi: 1.618; /* Golden Ratio */
+    --base-unit: 1rem; /* 16px */
+    --spacing-xs: calc(var(--base-unit) / var(--phi)); /* ~10px */
+    --spacing-sm: var(--base-unit); /* 16px */
+    --spacing-md: calc(var(--base-unit) * var(--phi)); /* ~26px */
+    --spacing-lg: calc(var(--spacing-md) * var(--phi)); /* ~42px */
+    --spacing-xl: calc(var(--spacing-lg) * var(--phi)); /* ~68px */
+    --spacing-xxl: calc(var(--spacing-xl) * var(--phi)); /* ~110px */
+    
+    /* Typography Scale (Golden Ratio) */
+    --font-xs: calc(var(--base-unit) / var(--phi)); /* ~10px */
+    --font-sm: var(--base-unit); /* 16px */
+    --font-md: calc(var(--base-unit) * var(--phi)); /* ~26px */
+    --font-lg: calc(var(--font-md) * var(--phi)); /* ~42px */
+    
+    /* Container Widths (Golden Ratio) */
+    --container-narrow: 61.8%; /* Golden ratio of 100% */
+    --container-wide: 100%;
+    
+    /* Colors */
+    --listings-bg: #FAFAFA;
+    --card-bg: #FFFFFF;
+    --border-color: #E8E8E8;
+    --text-primary: #1A1A1A;
+    --text-secondary: #6C757D;
+    --accent-color: var(--sk-primary);
+}
+
+/* ============================================
+   Listing Page Container
+   ============================================ */
+
+#search {
+    background: var(--listings-bg);
+    padding: 32px 0;
+    min-height: calc(100vh - 200px);
+}
+
+#search .container-fluid {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+@media (min-width: 768px) {
+    #search .container-fluid {
+        padding-left: 24px;
+        padding-right: 24px;
+    }
+}
+
+@media (min-width: 1200px) {
+    #search .container-fluid {
+        padding-left: 32px;
+        padding-right: 32px;
+    }
+}
+
+#search .row {
+    margin-left: 0;
+    margin-right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+#search .row > * {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* ============================================
+   Filter Sidebar - Golden Ratio Design
+   ============================================ */
+
+.filter-sidebar {
+    background: var(--card-bg);
+    border-radius: var(--sk-border-radius-lg);
+    padding: 20px;
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    box-shadow: var(--sk-shadow);
+    border: 1px solid var(--border-color);
+    transition: var(--sk-transition);
+    margin-bottom: 0;
+}
+
+.filter-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.filter-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.filter-sidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+.filter-sidebar:hover {
+    box-shadow: var(--sk-shadow-md);
+}
+
+.filter-sidebar h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-sidebar .form-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+}
+
+.filter-sidebar .form-select,
+.filter-sidebar .form-control {
+    border: 2px solid var(--border-color);
+    border-radius: var(--sk-border-radius);
+    padding: 10px 14px;
+    transition: var(--sk-transition);
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+}
+
+.filter-sidebar .form-select:last-child,
+.filter-sidebar .form-control:last-child {
+    margin-bottom: 16px;
+}
+
+.filter-sidebar .form-select:focus,
+.filter-sidebar .form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(13, 115, 119, 0.1);
+    outline: none;
+}
+
+.filter-sidebar .btn-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.filter-sidebar .btn-outline-primary {
+    border-radius: var(--sk-border-radius);
+    padding: var(--spacing-sm) var(--spacing-md);
+    transition: var(--sk-transition);
+}
+
+.filter-sidebar .form-check {
+    margin-bottom: var(--spacing-sm);
+    padding-left: calc(var(--spacing-md) + 0.5rem);
+}
+
+.filter-sidebar .form-check-label {
+    cursor: pointer;
+    transition: var(--sk-transition);
+}
+
+.filter-sidebar .form-check-label:hover {
+    color: var(--accent-color);
+}
+
+.filter-sidebar .btn-primary,
+.filter-sidebar .btn-outline-secondary {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--sk-border-radius);
+    font-weight: 600;
+    transition: var(--sk-transition);
+    margin-top: var(--spacing-md);
+}
+
+/* ============================================
+   Search Bar - Professional Design
+   ============================================ */
+
+#search .card {
+    border: none;
+    border-radius: var(--sk-border-radius-lg);
+    box-shadow: var(--sk-shadow);
+    margin-bottom: 24px;
+    background: var(--card-bg);
+    overflow: hidden;
+    transition: var(--sk-transition);
+}
+
+#search .card:hover {
+    box-shadow: var(--sk-shadow-md);
+}
+
+#search .card-body {
+    padding: 20px;
+}
+
+#search .input-group-lg {
+    border-radius: var(--sk-border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#search .input-group-text {
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-right: none;
+    color: var(--text-secondary);
+    padding: var(--spacing-md);
+}
+
+#search .form-control {
+    border: 2px solid var(--border-color);
+    border-left: none;
+    border-right: none;
+    padding: var(--spacing-md);
+    font-size: 1rem;
+    transition: var(--sk-transition);
+}
+
+#search .form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: none;
+    outline: none;
+}
+
+#search .btn-primary {
+    border: 2px solid var(--accent-color);
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-weight: 600;
+    transition: var(--sk-transition);
+}
+
+#search .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 115, 119, 0.3);
+}
+
+#activeFilters {
+    margin-top: var(--spacing-md);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+#activeFilters .badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--sk-border-radius);
+    font-weight: 500;
+    font-size: 0.85rem;
+}
+
+/* ============================================
+   View Toggle & Results Count
+   ============================================ */
+
+#search .d-flex.justify-content-between {
+    margin: 0 0 20px 0;
+    padding: 12px 0;
+    border-bottom: 2px solid var(--border-color);
+    align-items: center;
+}
+
+#resultsCount {
+    font-size: var(--font-md);
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.view-toggle {
+    display: flex;
+    gap: var(--spacing-xs);
+    background: var(--card-bg);
+    padding: var(--spacing-xs);
+    border-radius: var(--sk-border-radius);
+    box-shadow: var(--sk-shadow);
+}
+
+.view-toggle .btn {
+    border: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: calc(var(--sk-border-radius) - 2px);
+    transition: var(--sk-transition);
+    color: var(--text-secondary);
+}
+
+.view-toggle .btn-check:checked + .btn {
+    background: var(--accent-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.3);
+}
+
+.view-toggle .btn:hover {
+    background: rgba(13, 115, 119, 0.1);
+    color: var(--accent-color);
+}
+
+/* ============================================
+   Property Cards - Golden Ratio Layout
+   ============================================ */
+
+#listings {
+    margin: 0;
+    padding: 0;
+}
+
+#listings .row {
+    margin-left: 0;
+    margin-right: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#listings .row > * {
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 0;
+    display: flex;
+}
+
+.property-card {
+    border: none;
+    border-radius: var(--sk-border-radius-lg);
+    overflow: hidden;
+    background: var(--card-bg);
+    box-shadow: var(--sk-shadow);
+    transition: var(--sk-transition);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%;
+}
+
+.property-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--sk-shadow-hover);
+}
+
+/* Image styles moved to property-card-redesign.css */
+
+.property-card .property-info-section {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.property-card .card-body {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.property-card .card-title {
+    font-size: calc(var(--font-md) * 0.9);
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+}
+
+.property-card .badge {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: calc(var(--sk-border-radius) / 2);
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.property-card .text-muted {
+    color: var(--text-secondary) !important;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.property-card .property-info-section > .text-muted {
+    margin-bottom: var(--spacing-md);
+}
+
+.property-card .card-text {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    margin-bottom: var(--spacing-md);
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-align: left;
+}
+
+.property-card .property-details {
+    padding: var(--spacing-sm) 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.property-card .price-section {
+    padding-top: var(--spacing-sm);
+}
+
+.property-card .trust-score-section {
+    padding-top: var(--spacing-sm);
+    border-top: 1px solid var(--border-color);
+}
+
+/* Map Section - Below Property Info */
+.property-map-section {
+    border-top: 2px solid var(--border-color);
+    background: var(--listings-bg);
+    padding: var(--spacing-md);
+}
+
+.property-map-section .map-header {
+    padding: var(--spacing-sm) 0;
+    margin-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.property-map-section .map-header h6 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.property-card .property-map-container {
+    margin-bottom: var(--spacing-md);
+    border-radius: var(--sk-border-radius);
+    overflow: hidden;
+    border: 2px solid var(--border-color);
+    height: 200px;
+    width: 100%;
+    background: var(--card-bg);
+}
+
+.property-map-section .map-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.property-map-section .map-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+    border-radius: var(--sk-border-radius);
+    font-weight: 500;
+}
+
+.property-card .d-flex.gap-2 {
+    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-sm) !important;
+}
+
+.property-card .d-flex.gap-2 .btn {
+    flex: 1;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8rem;
+}
+
+.property-card .btn-sm {
+    padding: calc(var(--spacing-xs) * 1.2) var(--spacing-md);
+    font-size: 0.875rem;
+    border-radius: var(--sk-border-radius);
+    font-weight: 600;
+    white-space: nowrap;
+    min-width: fit-content;
+}
+
+.property-card .btn-primary.btn-sm {
+    box-shadow: 0 2px 6px rgba(13, 115, 119, 0.2);
+}
+
+.property-card .btn-primary.btn-sm:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(13, 115, 119, 0.3);
+}
+
+.property-card .h4 {
+    font-size: calc(var(--font-md) * 0.9);
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.property-card .progress {
+    height: 4px;
+    border-radius: calc(var(--sk-border-radius) / 2);
+    background: var(--border-color);
+    margin-top: var(--spacing-md);
+    overflow: hidden;
+    margin-bottom: var(--spacing-xs);
+}
+
+.property-card .progress-bar {
+    border-radius: calc(var(--sk-border-radius) / 2);
+    transition: width 0.6s ease;
+}
+
+.property-card small {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+    display: block;
+    font-weight: 500;
+}
+
+/* Trust Badge */
+.trust-badge {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.98);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--sk-border-radius);
+    font-size: 0.8rem;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    box-shadow: var(--sk-shadow);
+    font-weight: 600;
+}
+
+/* ============================================
+   Pagination - Golden Ratio Spacing
+   ============================================ */
+
+.pagination {
+    margin: 32px 0 0 0;
+    justify-content: center;
+    gap: 4px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.pagination .page-link {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border-color);
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--sk-transition);
+    margin: 0 2px;
+    min-width: 40px;
+    text-align: center;
+}
+
+.pagination .page-link:hover {
+    background: rgba(13, 115, 119, 0.1);
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    color: white;
+    box-shadow: 0 2px 8px rgba(13, 115, 119, 0.3);
+}
+
+.pagination .page-item.disabled .page-link {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   Responsive Design - Mobile First
+   ============================================ */
+
+@media (max-width: 991.98px) {
+    .filter-sidebar {
+        position: static;
+        max-height: none;
+        margin-bottom: 20px;
+        padding: 18px;
+    }
+    
+    #search {
+        padding: 24px 0;
+    }
+    
+    #search .card-body {
+        padding: 16px;
+    }
+    
+    #search .container-fluid {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    #search {
+        padding: 20px 0;
+    }
+    
+    #search .container-fluid {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    
+    #search .card {
+        margin-bottom: 16px;
+    }
+    
+    #search .card-body {
+        padding: 14px;
+    }
+    
+    .view-toggle {
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+    
+    #resultsCount {
+        font-size: 1rem;
+        margin-bottom: 0;
+    }
+    
+    #search .d-flex.justify-content-between {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 10px 0;
+    }
+    
+    .filter-sidebar {
+        padding: 16px;
+    }
+    
+    .filter-sidebar h5 {
+        font-size: 1rem;
+        margin-bottom: 14px;
+        padding-bottom: 10px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .property-card .card-img-top {
+        height: calc(var(--spacing-lg) * 4); /* ~160px on small screens */
+    }
+    
+    .filter-sidebar {
+        padding: var(--spacing-md);
+    }
+    
+    #search .input-group-lg {
+        flex-direction: column;
+    }
+    
+    #search .input-group-text,
+    #search .form-control,
+    #search .btn-primary {
+        border-radius: var(--sk-border-radius);
+        border: 2px solid var(--border-color);
+        width: 100%;
+    }
+    
+    #search .btn-primary {
+        margin-top: var(--spacing-sm);
+    }
+    
+    .listings-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .property-map-section .map-actions {
+        flex-direction: column;
+    }
+    
+    .property-map-section .map-actions .btn {
+        width: 100%;
+    }
+}
+
+/* ============================================
+   Loading States
+   ============================================ */
+
+#listings:empty::before {
+    content: 'Loading properties...';
+    display: block;
+    text-align: center;
+    padding: var(--spacing-xl);
+    color: var(--text-secondary);
+    font-size: var(--font-md);
+}
+
+/* ============================================
+   Empty State
+   ============================================ */
+
+#listings .col-12.text-center {
+    padding: var(--spacing-xxl) var(--spacing-lg);
+}
+
+#listings .col-12.text-center i {
+    font-size: calc(var(--font-lg) * 1.5);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    opacity: 0.5;
+}
+
+#listings .col-12.text-center h4 {
+    font-size: var(--font-md);
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+#listings .col-12.text-center p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* ============================================
+   Animations
+   ============================================ */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.property-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.property-card:nth-child(1) { animation-delay: 0.1s; }
+.property-card:nth-child(2) { animation-delay: 0.2s; }
+.property-card:nth-child(3) { animation-delay: 0.3s; }
+.property-card:nth-child(4) { animation-delay: 0.4s; }
+.property-card:nth-child(5) { animation-delay: 0.5s; }
+.property-card:nth-child(6) { animation-delay: 0.6s; }
+

@@ -1,0 +1,177 @@
+/* ============================================
+   SmartKeja - Main Stylesheet
+   ============================================ */
+
+:root {
+    --sk-primary: #2E7D32;
+    --sk-secondary: #FF6F00;
+    --sk-success: #4CAF50;
+    --sk-info: #2196F3;
+    --sk-dark: #1B5E20;
+    --sk-light: #f8f9fa;
+    --sk-border-radius: 12px;
+    --sk-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    --sk-shadow-hover: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+    color: #333;
+}
+
+/* ============================================
+   Typography
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.display-4 {
+    font-size: 3rem;
+    font-weight: 700;
+}
+
+.lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
+
+.navbar {
+    transition: all 0.3s ease;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    color: var(--sk-primary) !important;
+    font-size: 1.5rem;
+}
+
+.navbar-nav .nav-link {
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--sk-primary) !important;
+}
+
+/* ============================================
+   Hero Section
+   ============================================ */
+
+.hero-section {
+    background: linear-gradient(135deg, var(--sk-primary) 0%, var(--sk-dark) 100%);
+    color: white;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="rgba(255,255,255,0.05)" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+    background-size: cover;
+    opacity: 0.3;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+
+.btn-primary {
+    background-color: var(--sk-primary);
+    border-color: var(--sk-primary);
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--sk-dark);
+    border-color: var(--sk-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.btn-outline-primary {
+    color: var(--sk-primary);
+    border-color: var(--sk-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--sk-primary);
+    border-color: var(--sk-primary);
+    color: white;
+}
+
+/* ============================================
+   Cards
+   ============================================ */
+
+.card {
+    border: none;
+    border-radius: var(--sk-border-radius);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.property-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: none;
+    border-radius: var(--sk-border-radius);
+    overflow: hidden;
+    height: 100%;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--sk-shadow-hover);
+}
+
+.property-card img {
+    height: 220px;
+    object-fit: cover;
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.property-card:hover img {
+    transform: scale(1.05);
+}
+
+/* ============================================
+   Utilities
+   ============================================ */
+
+.shadow-sm {
+    box-shadow: var(--sk-shadow);
+}
+
+.progress-thin {
+    height: 5px;
+}
+
+.text-primary {
+    color: var(--sk-primary) !important;
+}
+
+.bg-primary {
+    background-color: var(--sk-primary) !important;
+}
+

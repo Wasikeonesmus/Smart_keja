@@ -1,0 +1,196 @@
+/* ============================================
+   Additional Balance & Alignment Fixes
+   ============================================ */
+
+/* Better card content structure */
+.property-card .card-body {
+    gap: var(--spacing-sm);
+}
+
+/* Consistent spacing for all card sections */
+.property-card .card-body > * {
+    margin-bottom: var(--spacing-sm);
+}
+
+.property-card .card-body > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Better badge alignment */
+.property-card .badge {
+    flex-shrink: 0;
+    margin-left: auto;
+}
+
+/* Improved rating display */
+.property-card .d-flex.justify-content-between.align-items-center .text-muted {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 0.85rem;
+}
+
+.property-card .d-flex.justify-content-between.align-items-center > div:last-child {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: 0.9rem;
+}
+
+/* Price section styling */
+.property-card .h4 + small {
+    display: block;
+    margin-top: calc(var(--spacing-xs) / 2);
+    font-size: 0.75rem;
+}
+
+/* Better button alignment */
+.property-card .btn-primary.btn-sm {
+    align-self: flex-end;
+}
+
+/* Map buttons styling */
+.property-card .d-flex.gap-2 .btn-outline-primary {
+    border: 1.5px solid var(--accent-color);
+    font-weight: 500;
+    transition: var(--sk-transition);
+}
+
+.property-card .d-flex.gap-2 .btn-outline-primary:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* Trust score section */
+.property-card .progress + small {
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin-top: var(--spacing-xs);
+}
+
+/* Better grid alignment */
+#listings .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    width: 100%;
+    margin: 0;
+}
+
+/* Card height consistency */
+.property-card {
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure cards are centered and clearly visible */
+.property-card {
+    opacity: 1;
+    visibility: visible;
+    transform: translateZ(0);
+}
+
+/* Map section styling */
+.property-map-section {
+    margin-top: auto;
+}
+
+.property-map-section .map-header {
+    text-align: center;
+}
+
+.property-map-section .map-header h6 {
+    justify-content: center;
+}
+
+/* Better property info visibility */
+.property-info-section {
+    background: var(--card-bg);
+}
+
+.property-info-section > * {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Improved spacing for empty states */
+#listings:empty {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Better filter section spacing */
+.filter-sidebar > * {
+    margin-bottom: var(--spacing-md);
+}
+
+.filter-sidebar > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Improved search bar spacing */
+#search .input-group-lg {
+    margin-bottom: var(--spacing-sm);
+}
+
+#activeFilters {
+    min-height: 32px;
+}
+
+/* Better view toggle alignment */
+.view-toggle {
+    align-items: center;
+}
+
+.view-toggle .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+}
+
+/* Consistent icon sizing */
+.property-card i {
+    font-size: 0.9em;
+}
+
+/* Better text hierarchy */
+.property-card .card-title {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.property-card .text-muted {
+    font-weight: 400;
+}
+
+/* Improved card hover state */
+.property-card:hover {
+    border-color: transparent;
+}
+
+/* Better mobile spacing */
+@media (max-width: 767.98px) {
+    .property-card .card-body {
+        padding: var(--spacing-md);
+    }
+    
+    .property-card .card-title {
+        font-size: calc(var(--font-md) * 0.8);
+        min-height: auto;
+    }
+    
+    .property-card .card-text {
+        min-height: auto;
+    }
+}
+

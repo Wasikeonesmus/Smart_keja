@@ -1,0 +1,133 @@
+.search-page {
+  padding: var(--spacing-xl) 0;
+}
+
+.search-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.search-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: var(--spacing-sm);
+}
+
+.search-header p {
+  color: var(--gray-600);
+  font-size: 1.125rem;
+}
+
+.search-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: var(--spacing-xl);
+}
+
+.filters-sidebar {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+
+.filters-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.filters-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-lg);
+  color: var(--gray-900);
+}
+
+.filter-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.filter-label {
+  display: block;
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.875rem;
+}
+
+.filter-input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  transition: all var(--transition-base);
+}
+
+.filter-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgb(16 185 129 / 0.1);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper svg {
+  position: absolute;
+  left: var(--spacing-md);
+  color: var(--gray-400);
+}
+
+.search-input-wrapper .filter-input {
+  padding-left: 2.5rem;
+}
+
+.price-inputs {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.price-inputs span {
+  color: var(--gray-500);
+  font-size: 0.875rem;
+}
+
+.search-results {
+  min-height: 400px;
+}
+
+.results-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.results-count {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+}
+
+.properties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+@media (max-width: 968px) {
+  .search-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-sidebar {
+    position: static;
+  }
+}
+
