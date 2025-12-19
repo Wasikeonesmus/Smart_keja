@@ -7,8 +7,10 @@
 3. **Connect GitHub** → Select `Wasikeonesmus/Smart_keja`
 4. **Settings**:
    - Name: `smartkeja-test`
-   - Build: `pip install -r requirements.txt && python manage.py migrate --noinput && python manage.py collectstatic --noinput`
-   - Start: `gunicorn smartkeja.wsgi:application`
+   - Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
+   - Start: `chmod +x start.sh && ./start.sh`
+   
+   The startup script will automatically run migrations before starting.
 5. **Environment Variables**:
    ```
    DEBUG=True
