@@ -14,6 +14,36 @@
    Base Mobile Styles (Default)
    ============================================ */
 
+/* Prevent horizontal scroll on mobile */
+@media (max-width: 575.98px) {
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+    
+    body {
+        position: relative;
+    }
+    
+    /* Ensure all containers respect viewport */
+    .container,
+    .container-fluid {
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Fix any elements that might overflow */
+    * {
+        max-width: 100%;
+    }
+    
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
 /* Navigation - Mobile */
 @media (max-width: 991.98px) {
     .navbar-brand .brand-text-sub {
