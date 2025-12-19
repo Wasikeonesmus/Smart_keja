@@ -228,7 +228,7 @@
             
             // Set Google Maps links
             document.getElementById('mapGoogleLink').href = `https://www.google.com/maps?q=${lat},${lng}`;
-            document.getElementById('mapDirectionsLink').href = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+            document.getElementById('mapDirectionsLink').href = `https://www.google.com/maps/dir/?destination=${lat},${lng}`;
             
             // Initialize map when modal is shown
             const mapContainer = document.getElementById('propertyMapContainer');
@@ -251,16 +251,15 @@
                         .bindPopup(`<strong>${propertyName}</strong><br>${propertyLocation}`)
                         .openPopup();
                 } else {
-                    // Fallback: Use Google Maps embed
+                    // Fallback: Show message with link to OpenStreetMap
                     mapContainer.innerHTML = `
-                        <iframe 
-                            width="100%" 
-                            height="500" 
-                            style="border:0" 
-                            loading="lazy" 
-                            allowfullscreen
-                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d-s6O4ZU9xN0TQ&q=${lat},${lng}&zoom=15">
-                        </iframe>
+                        <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light p-4">
+                            <i class="bi bi-map fs-1 text-muted mb-3"></i>
+                            <p class="text-muted mb-3">Map loading... Please wait or</p>
+                            <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15" target="_blank" class="btn btn-outline-primary">
+                                <i class="bi bi-geo-alt me-2"></i>View on OpenStreetMap
+                            </a>
+                        </div>
                     `;
                 }
                 
@@ -334,16 +333,15 @@
                         }, 100);
                     } catch (error) {
                         console.error('Error initializing map:', error);
-                        // Fallback: show Google Maps embed
+                        // Fallback: Show message with link to OpenStreetMap
                         container.innerHTML = `
-                            <iframe 
-                                width="100%" 
-                                height="100%" 
-                                style="border:0" 
-                                loading="lazy" 
-                                allowfullscreen
-                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d-s6O4ZU9xN0TQ&q=${lat},${lng}&zoom=15">
-                            </iframe>
+                            <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light p-3">
+                                <i class="bi bi-map text-muted mb-2"></i>
+                                <small class="text-muted mb-2">Map error occurred</small>
+                                <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15" target="_blank" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-geo-alt me-1"></i>View on OpenStreetMap
+                                </a>
+                            </div>
                         `;
                     }
                 } else {
@@ -374,20 +372,19 @@
                     }, 300);
                 };
                 leafletJS.onerror = function() {
-                    // If Leaflet fails to load, use Google Maps embed as fallback
+                    // If Leaflet fails to load, show OpenStreetMap link as fallback
                     mapContainers.forEach(container => {
                         const lat = parseFloat(container.getAttribute('data-lat'));
                         const lng = parseFloat(container.getAttribute('data-lng'));
                         if (lat && lng) {
                             container.innerHTML = `
-                                <iframe 
-                                    width="100%" 
-                                    height="100%" 
-                                    style="border:0" 
-                                    loading="lazy" 
-                                    allowfullscreen
-                                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6d-s6O4ZU9xN0TQ&q=${lat},${lng}&zoom=15">
-                                </iframe>
+                                <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light p-3">
+                                    <i class="bi bi-map text-muted mb-2"></i>
+                                    <small class="text-muted mb-2">Map unavailable</small>
+                                    <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15" target="_blank" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-geo-alt me-1"></i>View on OpenStreetMap
+                                    </a>
+                                </div>
                             `;
                         }
                     });

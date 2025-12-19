@@ -542,7 +542,7 @@ def notify_landlord_booking(booking, property_obj):
             # Google Maps link
             map_link = f"https://www.google.com/maps?q={lat},{lng}"
             # Google Maps directions link
-            directions_link = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lng}"
+            directions_link = f"https://www.google.com/maps/dir/?destination={lat},{lng}"
         
         # Format payment information
         payment_info = f"KES {price:,.0f}/month"

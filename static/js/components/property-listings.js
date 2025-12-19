@@ -529,7 +529,7 @@ export class PropertyListings {
                             <i class="bi bi-google"></i>
                             <span>Google Maps</span>
                         </a>
-                        <a href="https://www.google.com/maps/dir/?api=1&destination=${prop.latitude},${prop.longitude}" target="_blank" class="btn btn-outline-primary btn-map-action">
+                        <a href="https://www.google.com/maps/dir/?destination=${prop.latitude},${prop.longitude}" target="_blank" class="btn btn-outline-primary btn-map-action">
                             <i class="bi bi-signpost-2"></i>
                             <span>Directions</span>
                         </a>
