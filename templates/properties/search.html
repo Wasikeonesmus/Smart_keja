@@ -285,12 +285,29 @@
                     return;
                 }
                 
-                // Check if map already initialized (has leaflet-container class)
+                // Check if map already initialized - multiple checks
+                if (container._map) {
+                    // Map already exists, just update view if needed
+                    if (container._map.setView) {
+                        container._map.setView([lat, lng], 15);
+                    }
+                    return;
+                }
+                
                 if (container.querySelector('.leaflet-container')) {
+                    // Leaflet container already exists
+                    return;
+                }
+                
+                // Check if container has data attribute indicating initialization
+                if (container.hasAttribute('data-map-initialized')) {
                     return;
                 }
                 
                 if (typeof L !== 'undefined' && L.map) {
+                    // Mark as initializing to prevent duplicate calls
+                    container.setAttribute('data-map-initialized', 'true');
+                    
                     // Ensure container has explicit dimensions
                     if (!container.style.height || container.offsetHeight === 0) {
                         container.style.height = '220px';
@@ -302,6 +319,11 @@
                     
                     // Wait a moment for container to be ready, then initialize
                     setTimeout(() => {
+                        // Double-check before initializing
+                        if (container._map || container.querySelector('.leaflet-container')) {
+                            return;
+                        }
+                        
                         try {
                             // Clear loading spinner
                             container.innerHTML = '';
@@ -345,6 +367,7 @@
                             
                             // Store map instance for later use
                             container._map = map;
+                            container.setAttribute('data-map-initialized', 'true');
                             
                             // Invalidate size after a delay to ensure proper rendering
                             setTimeout(() => {
@@ -353,19 +376,21 @@
                                 }
                             }, 300);
                         } catch (error) {
+                            // Remove the flag on error so it can retry
+                            container.removeAttribute('data-map-initialized');
+                            
+                            // Check if error is about already initialized
+                            if (error.message && error.message.includes('already initialized')) {
+                                // Map was already initialized, just return
+                                return;
+                            }
+                            
                             console.error('Error initializing map:', error);
-                            console.error('Error details:', {
-                                message: error.message,
-                                stack: error.stack,
-                                lat: lat,
-                                lng: lng,
-                                container: container
-                            });
                             // Fallback: Show message with link to OpenStreetMap
                             container.innerHTML = `
                                 <div class="w-100 h-100 d-flex flex-column align-items-center justify-content-center bg-light p-3">
                                     <i class="bi bi-map text-muted mb-2"></i>
-                                    <small class="text-muted mb-2">Map error: ${error.message || 'Unknown error'}</small>
+                                    <small class="text-muted mb-2">Map loading...</small>
                                     <a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lng}&zoom=15" target="_blank" class="btn btn-sm btn-outline-primary mt-2">
                                         <i class="bi bi-geo-alt me-1"></i>View on OpenStreetMap
                                     </a>
