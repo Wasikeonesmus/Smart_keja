@@ -9,6 +9,7 @@
    - Name: `smartkeja-test`
    - Build: `pip install -r requirements.txt && python manage.py collectstatic --noinput`
    - Start: `gunicorn smartkeja.wsgi:application`
+   - Release: `python manage.py migrate --noinput` ⚠️ IMPORTANT!
 5. **Environment Variables**:
    ```
    DEBUG=True
