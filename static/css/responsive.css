@@ -38,18 +38,41 @@
 
 /* Container & Layout - Mobile */
 @media (max-width: 575.98px) {
+    * {
+        box-sizing: border-box;
+    }
+    
     .container-fluid {
         padding-left: 12px !important;
         padding-right: 12px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
     }
     
     #search {
         padding: 16px 0;
+        overflow-x: hidden;
     }
     
     #search .container-fluid {
         padding-left: 12px;
         padding-right: 12px;
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    #search .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: block;
+    }
+    
+    #search .row > * {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 16px;
     }
 }
 
@@ -59,12 +82,16 @@
         position: relative !important;
         top: 0 !important;
         max-height: none !important;
-        margin-bottom: 20px;
+        margin-bottom: 20px !important;
         border-radius: 12px;
+        width: 100% !important;
+        clear: both;
+        float: none;
     }
     
     .filter-sidebar .btn-group {
         flex-wrap: wrap;
+        width: 100%;
     }
     
     .filter-sidebar .btn-group .btn {
@@ -72,58 +99,94 @@
         min-width: calc(50% - 4px);
         margin: 2px;
     }
+    
+    /* Ensure filter sidebar doesn't overlap */
+    .col-lg-3 {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 16px;
+    }
+    
+    .col-lg-9 {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
 }
 
 /* Search Bar - Mobile */
 @media (max-width: 767.98px) {
     #search .card {
         padding: 16px;
+        width: 100% !important;
+        margin-bottom: 16px !important;
     }
     
     .input-group {
         flex-direction: column;
+        width: 100% !important;
     }
     
     .input-group .form-control {
         border-radius: 8px 8px 0 0 !important;
         margin-bottom: 8px;
+        width: 100% !important;
     }
     
     .input-group .btn {
         border-radius: 0 0 8px 8px !important;
-        width: 100%;
+        width: 100% !important;
+    }
+    
+    /* Ensure search section doesn't overlap */
+    #search > .container-fluid > .row {
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
     }
 }
 
 /* Property Cards - Mobile */
 @media (max-width: 575.98px) {
     .property-card {
-        margin-bottom: 20px;
+        margin-bottom: 24px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: block !important;
     }
     
     .property-image-wrapper {
         height: 220px !important;
+        width: 100% !important;
     }
     
     .property-info-section {
         padding: 16px !important;
+        width: 100% !important;
     }
     
     .property-title {
         font-size: 1.1rem !important;
         line-height: 1.3;
+        margin-bottom: 8px !important;
     }
     
     .property-features {
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 8px !important;
         padding: 12px 8px !important;
+        width: 100% !important;
+        margin: 0 !important;
     }
     
     .feature-item {
         flex-direction: column;
         text-align: center;
         gap: 4px;
+        width: 100% !important;
     }
     
     .feature-item i {
@@ -138,48 +201,87 @@
         flex-direction: column;
         gap: 12px;
         padding: 16px !important;
+        width: 100% !important;
     }
     
     .price-display {
         text-align: center;
+        width: 100% !important;
     }
     
     .btn-booking {
-        width: 100%;
+        width: 100% !important;
         padding: 14px 20px;
         font-size: 1rem;
+        margin: 0 !important;
     }
     
     .property-map-container {
         height: 180px !important;
+        width: 100% !important;
     }
     
     .map-actions {
         grid-template-columns: 1fr !important;
         gap: 8px;
+        width: 100% !important;
     }
     
     .btn-map-action {
-        width: 100%;
+        width: 100% !important;
         justify-content: center;
         padding: 12px 16px;
+        margin: 0 !important;
+    }
+    
+    /* Ensure no overlapping */
+    .property-card > * {
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }
 
 /* Listings Grid - Responsive */
 @media (max-width: 575.98px) {
+    #listings {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
     .listings-grid {
         grid-template-columns: 1fr !important;
         gap: 20px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    .listings-list {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     
     .listings-list .property-card {
         flex-direction: column;
+        width: 100% !important;
+        margin-bottom: 20px !important;
     }
     
     .listings-list .property-image-wrapper {
         width: 100% !important;
         height: 220px !important;
+    }
+    
+    /* Fix any column issues */
+    .row > [class*="col-"] {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        margin-bottom: 16px;
     }
 }
 
