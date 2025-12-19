@@ -416,12 +416,32 @@
             }
         }
         
-        // Initialize when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializePropertyMaps);
-        } else {
+        // Initialize when DOM is ready and after properties are loaded
+        function ensureMapsInitialized() {
+            // Wait for Leaflet to be available
+            if (typeof L === 'undefined') {
+                // Check again after a short delay
+                setTimeout(ensureMapsInitialized, 200);
+                return;
+            }
+            
+            // Initialize maps
             initializePropertyMaps();
+            
+            // Also initialize after a short delay to catch dynamically loaded properties
+            setTimeout(initializePropertyMaps, 1000);
         }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', ensureMapsInitialized);
+        } else {
+            ensureMapsInitialized();
+        }
+        
+        // Also listen for property listings updates
+        document.addEventListener('propertiesLoaded', function() {
+            setTimeout(initializePropertyMaps, 500);
+        });
         
         // Hook into PropertyListings to initialize maps after rendering
         // Wait for PropertyListings class to be available
